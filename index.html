@@ -1024,7 +1024,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 /* desktop: everything reads ~10% smaller (owner 2026-10-11). The hero keeps its full-viewport backdrop;
    only its content, the sections and the side rail are zoomed. */
 @media (min-width:861px){
-  .hero>.container,body>section,.side-nav{zoom:.9}
+  .hero>.container,body>section,.side-nav{zoom:.81}
 }
 /* phone polish (owner 2026-10-11) */
 @media (max-width:560px){
@@ -1048,6 +1048,36 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   #demos .album small{white-space:normal;text-align:center;font-size:11px;line-height:1.35}
   /* player chips (model / clip / length / delay) sat on top of the video: put them in the text area below */
   .gallery .stage .chips{position:static;margin:0 0 2px;pointer-events:auto}
+}
+@media (max-width:860px){
+  /* clip strips: ".fits" left them overflow:visible on touch screens, so they were clipped and could not be swiped */
+  #demos .case-list,#demos .case-list.fits{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+}
+@media (max-width:560px){
+  /* results table: the type column turns into a thin vertical label and, with the method names, stays pinned on
+     the left while the metric columns scroll sideways */
+  .tbl-wrap td.ty{writing-mode:vertical-rl;transform:rotate(180deg);width:22px;min-width:22px;padding:6px 3px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .tbl-wrap thead tr:last-child th:first-child{width:22px;min-width:22px;padding:6px 3px;font-size:0}
+  .tbl-wrap td.ty,.tbl-wrap thead tr:last-child th:first-child,.tbl-wrap thead tr.grp th:first-child{position:sticky;left:0;z-index:2;background:#fff}
+  .tbl-wrap td.m,.tbl-wrap thead tr:last-child th:nth-child(2){position:sticky;left:28px;z-index:2;background:#fff;box-shadow:6px 0 6px -6px rgb(var(--ink-rgb)/.25)}
+  .tbl-wrap thead th{background:var(--bg-alt)}
+  .tbl-wrap thead tr:last-child th:first-child,.tbl-wrap thead tr:last-child th:nth-child(2),.tbl-wrap thead tr.grp th:first-child{background:var(--bg-alt)}
+  .tbl-wrap tr.ours td.m{background:#eef6f3}
+  /* category tabs (Demos / Comparison): one compact segmented row with short labels; the data sources in
+     parentheses are desktop-only */
+  .tabs .src{display:none}
+  .tabs{flex-wrap:nowrap;gap:6px;justify-content:center}
+  .tabs button{flex:0 1 auto;padding:8px 13px;font-size:13.5px;white-space:nowrap}
+  .tabs button .n{margin-left:6px}
+  /* comparison cards: system buttons in two columns (each card was ~1.5 screens tall), group labels full width */
+  .cmp .lanes{grid-template-columns:1fr 1fr;gap:6px;padding:8px 12px 12px}
+  .cmp .lanes>.lane-group{grid-column:1/-1}
+  .cmp .lane{gap:7px;padding:7px 8px;font-size:12.5px}
+  .cmp .lane .bar{flex-basis:18px}
+  @media (max-width:360px){.cmp .lane .bar{display:none}.cmp .lane{font-size:12px;padding:7px 7px}
+    .tabs{gap:4px}.tabs button{padding:7px 9px;font-size:12.5px}.tabs button .n{margin-left:4px;min-width:18px;padding:1px 4px}}
+  /* demo player: the clip title is already the heading, so the duplicate title chip is dropped */
+  .gallery .stage .chip.ttl{display:none}
 }
 /* the loader's display:flex overrode the [hidden] attribute, so "Preparing demos" never went away on phones */
 .intro-load[hidden]{display:none}
@@ -1313,9 +1343,9 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   </div>
   <!-- One tabbed gallery for the demo groups (deep links: #demos-wild / -arvr / -game / -fail; old -dyn / -scn map to -game) -->
   <div class="tabs dtabs" role="tablist" aria-label="Demo categories" id="demos-gallery">
-    <button type="button" role="tab" id="dt-game" data-t="game" aria-controls="dp-game" aria-selected="true">Game (VGGSound + OGameData + HD gameplay)<span class="n">21</span></button>
-    <button type="button" role="tab" id="dt-arvr" data-t="arvr" aria-controls="dp-arvr" aria-selected="false" tabindex="-1">AR/VR (Ego-Exo4D + VR games)<span class="n">8</span></button>
-    <button type="button" role="tab" id="dt-wild" data-t="wild" aria-controls="dp-wild" aria-selected="false" tabindex="-1">In the wild (VGGSound)<span class="n">9</span></button>
+    <button type="button" role="tab" id="dt-game" data-t="game" aria-controls="dp-game" aria-selected="true">Game<span class="src"> (VGGSound + OGameData + HD gameplay)</span><span class="n">21</span></button>
+    <button type="button" role="tab" id="dt-arvr" data-t="arvr" aria-controls="dp-arvr" aria-selected="false" tabindex="-1">AR/VR<span class="src"> (Ego-Exo4D + VR games)</span><span class="n">8</span></button>
+    <button type="button" role="tab" id="dt-wild" data-t="wild" aria-controls="dp-wild" aria-selected="false" tabindex="-1">In the wild<span class="src"> (VGGSound)</span><span class="n">9</span></button>
     <!-- failure cases hidden for now (owner 2026-10-09); restore by un-commenting
     <button type="button" role="tab" id="dt-fail" data-t="fail" aria-controls="dp-fail" aria-selected="false" tabindex="-1" class="warn">Failure cases<span class="n">3</span></button>
     -->
@@ -2263,7 +2293,7 @@ document.getElementById('cmp-more').addEventListener('click', e => {
   if (!open) document.getElementById('cmp-tabs').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 });
 const CMP_LABEL = { 'In the wild': 'In the wild (VGGSound)', 'Game': 'Game (YouTube)' };   // tab text (owner 2026-10-09); keys stay
-document.getElementById('cmp-tabs').innerHTML = Object.keys(CMP).map(k => `<button data-t="${k}">${CMP_LABEL[k] || k}<span class="n">${CMP[k].length}</span></button>`).join('');
+document.getElementById('cmp-tabs').innerHTML = Object.keys(CMP).map(k => `<button data-t="${k}">${(CMP_LABEL[k] || k).replace(/ \(([^)]*)\)$/, '<span class="src"> ($1)</span>')}<span class="n">${CMP[k].length}</span></button>`).join('');
 document.getElementById('cmp-tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) showTab(b.dataset.t); });
 showTab('In the wild');
 
