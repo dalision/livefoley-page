@@ -1090,7 +1090,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <!-- hero key-art video (Kling render, speed-ramped, no audio): desktop only, plays once and rests on its last
      frame; sources are attached by JS so phones / reduced-motion / failures keep the static hero_world.jpg -->
 <video class="hero-video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"
-       data-webm="static/videos/hero/hero_world.webm?v=11" data-mp4="static/videos/hero/hero_world.mp4?v=11"></video>
+       data-webm="static/videos/hero/hero_world.webm?v=11" data-mp4="static/videos/hero/hero_world.mp4?v=12"></video>
 <!-- bottom-left replay control (desktop, appears once the clip is running): restarts the clip from the beginning -->
 <button type="button" class="hero-play" hidden aria-label="Replay the background video" title="Replay"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 3.8v4.6h4.6"/><path d="M10.4 9.2v5.6l4.6-2.8z" fill="currentColor" stroke="none"/></svg></button>
 <div class="container">
@@ -1435,7 +1435,7 @@ const DUR = {"iiith_cooking_111_2__20-60":30,"indiana_music_12_3__5-35":30,"sfu_
    warmed, the rest when that world / album is opened. A clip = the head of its mp4 (a byte range, enough to start
    playing at once; the HD game files are up to 44 MB) + its HD poster + its mel sheet. Off on phones / data saver. */
 const Warm = (() => {
-  const seen = new Set(), HEAD = 3 << 20;
+  const seen = new Set(), HEAD = 1.5 * (1 << 20);   // owner 2026-10-11: 3 MB heads made first loads too heavy
   const on = matchMedia('(min-width:861px)').matches && !(navigator.connection && navigator.connection.saveData);
   const clip = (mp4, id, mel) => {
     if (!on || !mp4 || seen.has(mp4)) return; seen.add(mp4);
@@ -2260,7 +2260,7 @@ const CMP = {
 const C = 'static/compare/';
 const PLAY = '<svg viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5v9l7.5-4.5z"/></svg>';
 const PAUSE = '<svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.5 1.5h2.5v9H2.5zM7 1.5h2.5v9H7z"/></svg>';
-const audio = new Audio(); audio.preload = 'auto';
+const audio = new Audio(); audio.preload = 'auto'; audio.crossOrigin = 'anonymous';   // media may come from a CDN (WebAudio needs CORS)
 let cur = null; // {card, video, sys}
 
 function cmpCard([id, t, s], k) {
@@ -2814,7 +2814,7 @@ spy();
    refused, missing file) falls back to the static hero_world.jpg. */
 function warmFirst() {
   if (warmFirst.done) return; warmFirst.done = true;
-  Object.keys(Warm.reg).forEach(k => Warm.first(k, 3));
+  Object.keys(Warm.reg).forEach(k => Warm.first(k, 1));   // owner 2026-10-11: only the first clip of each world / album up front
 }
 addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without the intro lock (deep links, replays)
 (function heroVideo() {
