@@ -17,7 +17,7 @@
 <meta property="og:title" content="LiveFoley: Dynamic Real-Time Video-to-Audio Generation for Immersive Interactive Worlds">
 <meta property="og:description" content="Streaming video-to-audio with alignment close to offline models, 236 ms time to first audio on one GPU. Sound for games, AR/VR and live cameras.">
 <!-- TODO(deploy): og:image must be an absolute URL once the page has a domain -->
-<meta property="og:image" content="static/figs/frontend.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/frontend.png">
 <meta name="twitter:card" content="summary_large_image">
 <!-- fonts are self-hosted (owner 2026-10-11): Google serves iOS a different Source Serif build that renders
      with broken spacing after "r" in some engines, and fonts.googleapis.com is unreachable from mainland China -->
@@ -153,7 +153,7 @@ section.alt{background:var(--bg-alt)}
   .orb:hover .orb-float::before,.orb:focus-visible .orb-float::before,.orb.near .orb-float::before{opacity:1;transform:scale(1)}
   .orb:hover .ball img{transform:scale(1.55)}
   /* proximity: the orb nearest the pointer swells a little before it is even touched (orbNear() in the script) */
-  /* orb content = a muted looping mini video (static/videos/orbs/*.mp4, 360x360 6 s; poster = first frame) */
+  /* orb content = a muted looping mini video (https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/orbs/*.mp4, 360x360 6 s; poster = first frame) */
   /* lens bulge + colour are BAKED into the *_lens.mp4 files (ffmpeg remap; a live SVG filter on 3 playing videos was
      janky). Only a GPU-cheap transform runs here. */
   /* perf: ONE hidden sprite video (orbs_sprite.mp4 = the three 360x360 *_lens clips side by side) is decoded and each
@@ -252,12 +252,12 @@ p.sub-desc{color:var(--text2);font-size:15px;max-width:1000px;margin-bottom:20px
 /* ---------- hero ---------- */
 /* hero = its own band: faint gradient to --bg-alt + hairline at the bottom, so it reads apart from Overview */
 .hero{padding:96px 0 44px;text-align:center;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-alt) 100%);border-bottom:1px solid var(--border);position:relative;overflow:hidden;isolation:isolate}
-/* translucent "world model + VR listener" key art behind the hero (static/figs/hero_world.jpg, from a
+/* translucent "world model + VR listener" key art behind the hero (https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/hero_world.jpg, from a
    Gemini render); ::before = the image, faded at the bottom into the band; ::after = a soft white glow that
    keeps the title / authors readable. Tune --hero-img-a (image opacity) and the glow alpha here. */
 .hero{--hero-img-a:.42}
 .hero::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;
-  background:url("static/figs/hero_world.jpg?v=2") center 42%/cover no-repeat;opacity:var(--hero-img-a);
+  background:url("https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/hero_world.jpg?v=2") center 42%/cover no-repeat;opacity:var(--hero-img-a);
   -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 72%,transparent 100%);
   mask-image:linear-gradient(180deg,#000 0%,#000 72%,transparent 100%)}
 .hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
@@ -1090,7 +1090,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <!-- hero key-art video (Kling render, speed-ramped, no audio): desktop only, plays once and rests on its last
      frame; sources are attached by JS so phones / reduced-motion / failures keep the static hero_world.jpg -->
 <video class="hero-video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"
-       data-webm="static/videos/hero/hero_world.webm?v=11" data-mp4="static/videos/hero/hero_world.mp4?v=12"></video>
+       data-webm="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/hero/hero_world.webm?v=11" data-mp4="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/hero/hero_world.mp4?v=12"></video>
 <!-- bottom-left replay control (desktop, appears once the clip is running): restarts the clip from the beginning -->
 <button type="button" class="hero-play" hidden aria-label="Replay the background video" title="Replay"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 3.8v4.6h4.6"/><path d="M10.4 9.2v5.6l4.6-2.8z" fill="currentColor" stroke="none"/></svg></button>
 <div class="container">
@@ -1184,17 +1184,17 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
        forward and reveals its text. Floor shadows, cue badges and prev/next arrows are injected by JS. -->
   <div class="s3d" data-kind="Figure" data-hr="0.41" data-near="1">
     <div class="s3d-scene">
-      <div class="s3d-item" data-zoom="static/figs/motivation.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/motivation.png" width="1713" height="844" alt="User study of perceptual delay thresholds and empirical study of streaming visual frontends" loading="lazy"></div>
-        <img class="s3d-thumb" src="static/figs/th/motivation.jpg" alt="" loading="lazy"><span class="s3d-name">Motivation</span>
+      <div class="s3d-item" data-zoom="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/motivation.png"><div class="s3d-card">
+        <div class="s3d-body"><img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/sm/motivation.png" width="1713" height="844" alt="User study of perceptual delay thresholds and empirical study of streaming visual frontends" loading="lazy"></div>
+        <img class="s3d-thumb" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/th/motivation.jpg" alt="" loading="lazy"><span class="s3d-name">Motivation</span>
         <button type="button" class="s3d-hit" aria-controls="method-panel" aria-label="Motivation figure"></button></div></div>
-      <div class="s3d-item" data-zoom="static/figs/frontend.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/frontend.png" width="2867" height="1026" alt="Chunked window vs trailing sliding window vs unified varhop" loading="lazy"></div>
-        <img class="s3d-thumb" src="static/figs/th/frontend.jpg" alt="" loading="lazy"><span class="s3d-name">Visual frontend</span>
+      <div class="s3d-item" data-zoom="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/frontend.png"><div class="s3d-card">
+        <div class="s3d-body"><img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/sm/frontend.png" width="2867" height="1026" alt="Chunked window vs trailing sliding window vs unified varhop" loading="lazy"></div>
+        <img class="s3d-thumb" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/th/frontend.jpg" alt="" loading="lazy"><span class="s3d-name">Visual frontend</span>
         <button type="button" class="s3d-hit" aria-controls="method-panel" aria-label="Streaming visual frontend figure"></button></div></div>
-      <div class="s3d-item" data-zoom="static/figs/backend.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/backend.png" width="2902" height="1273" alt="Continuous AR backbone with Future-Warmup LocDiT" loading="lazy"></div>
-        <img class="s3d-thumb" src="static/figs/th/backend.jpg" alt="" loading="lazy"><span class="s3d-name">Audio backend</span>
+      <div class="s3d-item" data-zoom="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/backend.png"><div class="s3d-card">
+        <div class="s3d-body"><img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/sm/backend.png" width="2902" height="1273" alt="Continuous AR backbone with Future-Warmup LocDiT" loading="lazy"></div>
+        <img class="s3d-thumb" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/th/backend.jpg" alt="" loading="lazy"><span class="s3d-name">Audio backend</span>
         <button type="button" class="s3d-hit" aria-controls="method-panel" aria-label="Audio backend figure"></button></div></div>
       <span class="s3d-lbl" aria-hidden="true">Motivation</span><span class="s3d-lbl" aria-hidden="true">Streaming visual frontend</span><span class="s3d-lbl" aria-hidden="true">Audio backend</span>
     </div>
@@ -1259,9 +1259,9 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   </div></div>
         <span class="s3d-name">Objective metrics</span>
         <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Objective metrics: system-level comparison table"></button></div></div>
-      <div class="s3d-item" data-zoom="static/figs/mos.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/mos.png" width="2516" height="725" alt="Mean opinion scores for quality and alignment" loading="lazy"></div>
-        <img class="s3d-thumb" src="static/figs/th/mos.jpg" alt="" loading="lazy"><span class="s3d-name">Listening test</span>
+      <div class="s3d-item" data-zoom="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/mos.png"><div class="s3d-card">
+        <div class="s3d-body"><img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/sm/mos.png" width="2516" height="725" alt="Mean opinion scores for quality and alignment" loading="lazy"></div>
+        <img class="s3d-thumb" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/figs/th/mos.jpg" alt="" loading="lazy"><span class="s3d-name">Listening test</span>
         <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Listening test figure"></button></div></div>
       <div class="s3d-item"><div class="s3d-card">
     <div class="s3d-body"><div class="lat">
@@ -1305,7 +1305,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <!-- =================== DEMOS =================== -->
 <section id="demos" class="alt">
 <!-- driving backdrop (owner 2026-10-09): City drive, blur BAKED into the file (640x360 gblur 14, 93 KB), desktop orb mode only -->
-<video class="drive-bg" src="static/videos/orbs/drive_bg.mp4" poster="static/videos/orbs/drive_bg.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true" tabindex="-1"></video>
+<video class="drive-bg" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/orbs/drive_bg.mp4" poster="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/orbs/drive_bg.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true" tabindex="-1"></video>
 <div class="drive-veil" aria-hidden="true"></div>
 <canvas class="demo-bg idle" aria-hidden="true"></canvas>
 <div class="container">
@@ -1326,18 +1326,18 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   <div class="orbs" id="demo-orbs" role="group" aria-label="Demo worlds">
     <div class="orb-col">   <!-- order (owner 2026-10-10): Game Engine, AR / VR, In the wild; data-tile = the orb's tile in the sprite, not its position -->
       <button type="button" class="orb" data-t="game" aria-pressed="false" aria-label="Game engine (VGGSound, OGameData, HD gameplay), 21 clips">
-        <span class="orb-float"><span class="ball"><img class="orb-pic" src="static/videos/orbs/game_city_lens.jpg" alt=""><canvas class="orb-pic" width="360" height="360" data-tile="2" aria-hidden="true"></canvas></span></span>
+        <span class="orb-float"><span class="ball"><img class="orb-pic" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/orbs/game_city_lens.jpg" alt=""><canvas class="orb-pic" width="360" height="360" data-tile="2" aria-hidden="true"></canvas></span></span>
         <span class="orb-shadow" aria-hidden="true"></span>
         <span class="orb-label"><b>Game Engine</b><small>Unreal Engine</small></span><span class="orb-hint" aria-hidden="true">Click to explore</span></button>
       <button type="button" class="orb" data-t="arvr" aria-pressed="false" aria-label="AR/VR (Ego-Exo4D and VR games), 8 clips">
-        <span class="orb-float"><span class="ball"><img class="orb-pic" src="static/videos/orbs/arvr_race_lens.jpg" alt=""><canvas class="orb-pic" width="360" height="360" data-tile="1" aria-hidden="true"></canvas></span></span>
+        <span class="orb-float"><span class="ball"><img class="orb-pic" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/orbs/arvr_race_lens.jpg" alt=""><canvas class="orb-pic" width="360" height="360" data-tile="1" aria-hidden="true"></canvas></span></span>
         <span class="orb-shadow" aria-hidden="true"></span>
         <span class="orb-label"><b>AR / VR</b><small>Ego-Exo4D + VR Games</small></span><span class="orb-hint" aria-hidden="true">Click to explore</span></button>
       <button type="button" class="orb" data-t="wild" aria-pressed="false" aria-label="In the wild (VGGSound), 9 clips">
-        <span class="orb-float"><span class="ball"><img class="orb-pic" src="static/videos/orbs/wild_swim_lens.jpg" alt=""><canvas class="orb-pic" width="360" height="360" data-tile="0" aria-hidden="true"></canvas></span></span>
+        <span class="orb-float"><span class="ball"><img class="orb-pic" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/orbs/wild_swim_lens.jpg" alt=""><canvas class="orb-pic" width="360" height="360" data-tile="0" aria-hidden="true"></canvas></span></span>
         <span class="orb-shadow" aria-hidden="true"></span>
         <span class="orb-label"><b>In the wild</b><small>YouTube</small></span><span class="orb-hint" aria-hidden="true">Click to explore</span></button>
-      <video class="orb-sprite" src="static/videos/orbs/orbs_sprite.mp4" muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1" style="display:none"></video>
+      <video class="orb-sprite" src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/orbs/orbs_sprite.mp4" muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1" style="display:none"></video>
       <button type="button" class="orb-back" aria-label="Back to all demo worlds"><span aria-hidden="true">&#8634;</span><small>All worlds</small></button>
     </div>
   </div>
@@ -1360,22 +1360,22 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
     <div class="case-list" role="tablist" aria-label="Ego-Exo4D clips" aria-orientation="vertical">
       <!-- VR gameplay first (owner 2026-10-09): racing + shooter are 16 kHz mono (gamehd/), table tennis is 48k (videos/game/); FPS shooting range + Shooter removed -->
       <button type="button" class="case-btn" role="tab" id="ego-t6" aria-controls="ego-stage" data-id="vr__long_vr_09" data-dir="gamehd" data-model="LiveFoley-16k (mono)" data-src="VR gameplay" data-title="VR racing" data-sub="engine, gear shifts, tire squeal" data-dur="31 s">
-        <img src="static/posters/vr__long_vr_09.jpg" alt="" loading="lazy"><span><span class="k">01</span><b>VR racing</b><small>engine, gear shifts, tire squeal &middot; 31&nbsp;s</small></span></button>
+        <img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/vr__long_vr_09.jpg" alt="" loading="lazy"><span><span class="k">01</span><b>VR racing</b><small>engine, gear shifts, tire squeal &middot; 31&nbsp;s</small></span></button>
       <button type="button" class="case-btn" role="tab" id="ego-t5" aria-controls="ego-stage" data-id="vr__long_vr_04" data-dir="gamehd" data-model="LiveFoley-16k (mono)" data-src="VR gameplay" data-title="VR shooter" data-sub="gunfire, reloads, footsteps" data-dur="32 s">
-        <img src="static/posters/vr__long_vr_04.jpg" alt="" loading="lazy"><span><span class="k">02</span><b>VR shooter</b><small>gunfire, reloads, footsteps &middot; 32&nbsp;s</small></span></button>
+        <img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/vr__long_vr_04.jpg" alt="" loading="lazy"><span><span class="k">02</span><b>VR shooter</b><small>gunfire, reloads, footsteps &middot; 32&nbsp;s</small></span></button>
       <button type="button" class="case-btn" role="tab" id="ego-t7" aria-controls="ego-stage" data-id="SxE3NjKtHDE_0s-10s_ours" data-dir="game" data-src="VR gameplay" data-title="VR table tennis" data-sub="rally, paddle hits" data-dur="10 s">
-        <img src="static/posters/SxE3NjKtHDE_0s-10s_ours.jpg" alt="" loading="lazy"><span><span class="k">03</span><b>VR table tennis</b><small>rally, paddle hits &middot; 10&nbsp;s</small></span></button>
+        <img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/SxE3NjKtHDE_0s-10s_ours.jpg" alt="" loading="lazy"><span><span class="k">03</span><b>VR table tennis</b><small>rally, paddle hits &middot; 10&nbsp;s</small></span></button>
       <!-- Ego-Exo4D -->
       <button type="button" class="case-btn" role="tab" id="ego-t4" aria-controls="ego-stage" data-id="iiith_cooking_111_2__20-60" data-title="Cooking an omelet" data-sub="chopping, sizzle, cookware on stone" data-dur="30 s">
-        <img src="static/posters/iiith_cooking_111_2__20-60.jpg" alt="" loading="lazy"><span><span class="k">04</span><b>Cooking an omelet</b><small>chopping, sizzle, cookware on stone &middot; 30&nbsp;s</small></span></button>
+        <img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/iiith_cooking_111_2__20-60.jpg" alt="" loading="lazy"><span><span class="k">04</span><b>Cooking an omelet</b><small>chopping, sizzle, cookware on stone &middot; 30&nbsp;s</small></span></button>
       <button type="button" class="case-btn" role="tab" id="ego-t0" aria-controls="ego-stage" data-id="indiana_music_12_3__5-35" data-title="Piano" data-sub="structured exercise" data-dur="30 s">
-        <img src="static/posters/indiana_music_12_3__5-35.jpg" alt="" loading="lazy"><span><span class="k">05</span><b>Piano</b><small>structured exercise &middot; 30&nbsp;s</small></span></button>
+        <img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/indiana_music_12_3__5-35.jpg" alt="" loading="lazy"><span><span class="k">05</span><b>Piano</b><small>structured exercise &middot; 30&nbsp;s</small></span></button>
       <button type="button" class="case-btn" role="tab" id="ego-t1" aria-controls="ego-stage" data-id="sfu_cooking026_4__0-60" data-title="Scrambled eggs" data-sub="pan work, utensils" data-dur="60 s">
-        <img src="static/posters/sfu_cooking026_4__0-60.jpg" alt="" loading="lazy"><span><span class="k">06</span><b>Scrambled eggs</b><small>pan work, utensils &middot; 60&nbsp;s</small></span></button>
+        <img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/sfu_cooking026_4__0-60.jpg" alt="" loading="lazy"><span><span class="k">06</span><b>Scrambled eggs</b><small>pan work, utensils &middot; 60&nbsp;s</small></span></button>
       <button type="button" class="case-btn" role="tab" id="ego-t2" aria-controls="ego-stage" data-id="sfu_covid_010_4__0-60" data-title="Antigen test" data-sub="packaging, small plastics" data-dur="60 s">
-        <img src="static/posters/sfu_covid_010_4__0-60.jpg" alt="" loading="lazy"><span><span class="k">07</span><b>Antigen test</b><small>packaging, small plastics &middot; 60&nbsp;s</small></span></button>
+        <img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/sfu_covid_010_4__0-60.jpg" alt="" loading="lazy"><span><span class="k">07</span><b>Antigen test</b><small>packaging, small plastics &middot; 60&nbsp;s</small></span></button>
       <button type="button" class="case-btn" role="tab" id="ego-t3" aria-controls="ego-stage" data-id="upenn_0331_Guitar_1_2__50-80" data-title="Guitar scales" data-sub="plucked onsets, room tone" data-dur="30 s">
-        <img src="static/posters/upenn_0331_Guitar_1_2__50-80.jpg" alt="" loading="lazy"><span><span class="k">08</span><b>Guitar scales</b><small>plucked onsets, room tone &middot; 30&nbsp;s</small></span></button>
+        <img src="https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/upenn_0331_Guitar_1_2__50-80.jpg" alt="" loading="lazy"><span><span class="k">08</span><b>Guitar scales</b><small>plucked onsets, room tone &middot; 30&nbsp;s</small></span></button>
     </div>
     <article class="stage" id="ego-stage" role="tabpanel">
       <video controls playsinline preload="none"></video>
@@ -1428,7 +1428,7 @@ const Scrolling = (() => { let on = false, t = 0; const root = document.document
   addEventListener('scroll', () => { if (!on) { on = true; root.classList.add('is-scrolling'); }
     clearTimeout(t); t = setTimeout(() => { on = false; root.classList.remove('is-scrolling'); }, 200); }, { passive: true });
   return { get on() { return on; } }; })();
-const V = 'static/videos/', P = 'static/posters/', PH = 'static/posters_hd/';   // posters: 960 px thumbs; posters_hd: native-size frame (same 1 s frame) for the player and the fly-out card
+const V = 'https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/', P = 'https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters/', PH = 'https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/posters_hd/';   // posters: 960 px thumbs; posters_hd: native-size frame (same 1 s frame) for the player and the fly-out card
 /* clip lengths in s (ffprobe, incl. the 0.25 s delay pad), shown on each thumbnail */
 const DUR = {"iiith_cooking_111_2__20-60":30,"indiana_music_12_3__5-35":30,"sfu_cooking026_4__0-60":60,"sfu_covid_010_4__0-60":60,"upenn_0331_Guitar_1_2__50-80":30,"0O-gZoirpRA_000030_s404":10,"EW1Jk7-DIO0_000030_s101":10,"GuYRF0no7hw_000030_s202":10,"O2W0N3uKXmo_55s-65s_s101":10,"SxE3NjKtHDE_0s-10s_ours":10,"_3wiDhjHEOI_full_ours":14,"_RlpRKcyrXw_1552s-1582s_ours":30,"driving__16s_driving_02":16,"driving__16s_driving_07":16,"driving__long_sports_08":25,"roam__16s_roam_07":16,"roam__long_roam_07":32,"shooter__16s_sports_10":16,"shooter__long_shooter_08":29,"shooter__long_shooter_10":32,"ui__long_shooter_05":32,"ui__long_shooter_07":32,"ui__long_ui_01":32,"ui__long_ui_04":31,"vr__long_vr_04":32,"vr__long_vr_09":31,"game_-xFogx66VHY_scene-334_s303":8,"game_2zJGEdY3I4c_scene-73_s303":8,"game_4I1MBmrGloU_scene-29_s101":8,"game_4keUlXV_z5w_scene-147_s11":8,"game_5wUecxcGCGI_scene-1179_s404":8,"game_6rALm87VODU_scene-44_s101":8,"game_W2A_PcIhUVM_scene-149_s404":8,"game_WeeWIjPb9nM_scene-195_s303":8,"00gxEsWO4mo_000259__s11":10,"07FxCXxknY4_000030__s11":10,"0Cu33yBwAPg_000060__s101":10,"0HXYdGGKV2k_000030__s11":10,"0LY5zuRlIac_000000__s101":10,"0NZLG7HMiLg_000590__s101":10,"0RZRFj7zDnQ_000030__s101":10,"0TSOlaZXXM8_000080__s11":10,"0VW4nelMODc_000259__s101":10};
 /* bandwidth-aware preloading (owner 2026-10-09): at start only the first 3 clips of every world / Game album are
@@ -1441,7 +1441,7 @@ const Warm = (() => {
     if (!on || !mp4 || seen.has(mp4)) return; seen.add(mp4);
     try { fetch(mp4, { headers: { Range: `bytes=0-${HEAD - 1}` }, priority: 'low' }).catch(() => {}); } catch (_) {}
     new Image().src = `${PH}${id}.jpg`;
-    if (mel) new Image().src = `static/mel/${id}.png?v=4`;
+    if (mel) new Image().src = `https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/mel/${id}.png?v=4`;
   };
   const reg = {};                                   // world / album key -> [clip warmers in display order]
   return { clip, reg, on,
@@ -1518,7 +1518,7 @@ function playerExtras(st, v, opt = {}) {
     note.hidden = false;
   });
   if (opt.mel === false) return;   // e.g. the Ego-Exo4D clips already carry the audio panel in the frame
-  /* mel timeline (WorldSonus-style): a precomputed colour mel sheet per clip (static/mel/<clip>.png, 80 mel
+  /* mel timeline (WorldSonus-style): a precomputed colour mel sheet per clip (https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/mel/<clip>.png, 80 mel
      bands x 50 frames/s) drawn by MEDIA time, never wall time: the right edge is always "now", the strip shows
      the last 8 s, so it is exact while muted, paused or seeking and looks like the sound being generated */
   const MEL_FPS = 50, WIN = 8;
@@ -1580,7 +1580,7 @@ function playerExtras(st, v, opt = {}) {
     const img = new Image();
     img.onload = () => { if (name === n) { sheet = img; status(); draw(); } };
     img.onerror = () => { if (name === n) { failed = true; status(); } };
-    img.src = `static/mel/${n}.png?v=4`;          // bump when the sheets are regenerated
+    img.src = `https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/mel/${n}.png?v=4`;          // bump when the sheets are regenerated
   }
   ['loadstart', 'loadedmetadata'].forEach(ev => v.addEventListener(ev, load));
   ['play', 'playing'].forEach(ev => v.addEventListener(ev, kick));
@@ -2175,7 +2175,7 @@ document.addEventListener('play', e => {
 /* ego-exo case gallery: one player; a case's mp4 is only requested once that case is selected */
 const egoTabs = [...document.querySelectorAll('#ego [role="tab"]')];
 egoTabs.forEach(b => { const d = b.dataset; (Warm.reg.arvr = Warm.reg.arvr || []).push(() =>
-  Warm.clip(`static/videos/${d.dir || 'egoexo'}/${d.id}.mp4?v=2`, d.id, !!d.dir)); });   // Ego-Exo4D clips carry their own audio panel (no mel)
+  Warm.clip(`https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/${d.dir || 'egoexo'}/${d.id}.mp4?v=2`, d.id, !!d.dir)); });   // Ego-Exo4D clips carry their own audio panel (no mel)
 const egoVideo = document.querySelector('#ego-stage video');
 let egoI = -1;
 /* mel strip on: the VR gameplay clips need it; the Ego-Exo4D clips carry their own audio panel in the frame, so the
@@ -2202,7 +2202,7 @@ function egoGo(i, focus) {
   egoVideo.poster = `${PH}${d.id}.jpg`;
   egoVideo.setAttribute('aria-label', `${d.title}, ${d.src || 'Ego-Exo4D'}, video with generated audio`);
   egoVideo.preload = 'metadata';
-  egoVideo.src = `static/videos/${d.dir || 'egoexo'}/${d.id}.mp4?v=2`;   // v=2: cooking clip trimmed to 30 s; VR gameplay lives in gamehd/
+  egoVideo.src = `https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/videos/${d.dir || 'egoexo'}/${d.id}.mp4?v=2`;   // v=2: cooking clip trimmed to 30 s; VR gameplay lives in gamehd/
   if (focus) { t.focus(); t.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
 }
 document.querySelector('#ego .case-list').addEventListener('click', e => { const b = e.target.closest('[role="tab"]'); if (!b) return; const i = egoTabs.indexOf(b); let landed = null; if (i !== egoI) { fitPlayer(egoVideo, thumbRatio(b), false); landed = flyThumb(b, document.getElementById('ego-stage')); } egoGo(i); focusPlayer(document.getElementById('ego-stage')); autoPlay(egoVideo, landed); });
@@ -2257,7 +2257,7 @@ const CMP = {
     ['dyn___RlpRKcyrXw_1552s-1582s', 'Shooter', 'weapons'],
   ],
 };
-const C = 'static/compare/';
+const C = 'https://cdn.jsdelivr.net/gh/dalision/livefoley-page@4090e63755eb9afce33aa096f2833c969394c00c/static/compare/';
 const PLAY = '<svg viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5v9l7.5-4.5z"/></svg>';
 const PAUSE = '<svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.5 1.5h2.5v9H2.5zM7 1.5h2.5v9H7z"/></svg>';
 const audio = new Audio(); audio.preload = 'auto'; audio.crossOrigin = 'anonymous';   // media may come from a CDN (WebAudio needs CORS)
