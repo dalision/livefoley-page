@@ -10,12 +10,12 @@
 <link rel="icon" type="image/png" sizes="32x32" href="static/icons/icon-32.png?v=2">
 <link rel="icon" type="image/png" sizes="16x16" href="static/icons/icon-16.png?v=2">
 <link rel="apple-touch-icon" sizes="180x180" href="static/icons/icon-180.png?v=2">
-<title>LiveFoley: Dynamic Acoustic World Model</title>
-<meta name="description" content="LiveFoley: Dynamic Real-Time Video-to-Audio Generation for Immersive Interactive Worlds. Streaming video-to-audio with 236 ms time to first audio and 0.49 RTF on a single A800 GPU.">
+<title>LiveFoley</title>
+<meta name="description" content="LiveFoley: Dynamic Real-Time Video-to-Audio Generation for Immersive Interactive Worlds. Streaming video-to-audio with a 156 ms end-to-end latency on a single A800 GPU.">
 <meta name="theme-color" content="#ffffff">
 <meta property="og:type" content="website">
 <meta property="og:title" content="LiveFoley: Dynamic Real-Time Video-to-Audio Generation for Immersive Interactive Worlds">
-<meta property="og:description" content="Streaming video-to-audio with alignment close to offline models, 236 ms time to first audio on one GPU. Sound for games, AR/VR and live cameras.">
+<meta property="og:description" content="Streaming video-to-audio with temporal alignment on par with offline models and a 156 ms end-to-end latency on one GPU. Sound for games, AR/VR and live cameras.">
 <!-- TODO(deploy): og:image must be an absolute URL once the page has a domain -->
 <meta property="og:image" content="static/figs/frontend.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -972,6 +972,8 @@ tr.ours td.m{font-weight:600;color:var(--accent-ink)}
 tr.quoted td{color:#8e9097}
 td.b{font-weight:700}
 td.u{text-decoration:underline;text-underline-offset:3px}
+/* 2026-10-15: tighter cells inside the desktop 3D card so the IB column is not cut off (table 921 px vs card 884 px) */
+@media (min-width:761px){.s3d-card table th,.s3d-card table td{padding-left:8px;padding-right:8px}}
 .lat{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
 .lat h4{font-family:"Source Serif 4",serif;font-size:19px;margin-bottom:12px}
 .lat .row{display:grid;grid-template-columns:150px 1fr 56px;align-items:center;gap:10px;font-size:13.5px;margin:7px 0}
@@ -1145,8 +1147,8 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <div class="container">
   <h2 class="sec-title">Overview</h2>
   <div class="abstract">
-    <p>Interactive worlds such as games, AR/VR and 3D engines need sound that reacts to every action as the frames are rendered. Recent audio-visual world models generate synchronized audio, but their sound is coupled to their own video generators and cannot serve external sources such as game-engine renders or live camera feeds. <b>Streaming video-to-audio (V2A)</b> is a <b>source-agnostic</b> alternative that generates sound directly from any live pixel stream, but a usable sound engine must meet three demands at once: <b>imperceptible latency</b>, <b>precise audio-visual alignment</b> and <b>high audio quality</b>. Existing streaming V2A methods trade these off: shrinking the visual receptive field to cut latency degrades alignment, and causal per-patch denoising impairs audio quality.</p>
-    <p style="margin-top:12px">We present <b>LiveFoley</b>, a plug-and-play sound engine for interactive worlds. For <b>imperceptible latency</b>, LiveFoley reaches a 236&nbsp;ms time to first audio (0.49 RTF) on a single A800 GPU, below the 0.35&nbsp;s perceptual threshold of action sounds. For <b>precise alignment</b>, a Trailing Sliding Window turns off-the-shelf segment-level encoders into streaming modules without retraining, matching offline models (DeSync 0.48 vs. 0.47) at a 0.08&nbsp;s look-ahead. For <b>audio quality</b>, Future-Warmup LocDiT brings cross-patch denoising into a strictly causal backend, giving the best quality among streaming systems. In addition, a Unified Varhop Framework lets one model <b>adapt its latency to the scene</b>, and LiveFoley generalizes to AR/VR and game-engine footage with stable, long-form generation.</p>
+    <p>Interactive worlds such as games, AR/VR and 3D engines need sound that reacts to every action as frames are rendered. Recent audio-visual world models generate synchronized audio, but their audio is tied to their own video generators and cannot serve external sources such as game-engine renders or live camera feeds. <b>Streaming video-to-audio (V2A)</b> offers a <b>source-agnostic</b> alternative by generating sound directly from any live pixel stream. To be a usable sound engine, however, it must meet three demands at once: <b>imperceptible latency</b>, <b>precise audio-visual alignment</b> and <b>high audio quality</b>. Existing streaming V2A methods trade these off: shrinking the visual receptive field to cut latency degrades alignment, and denoising each audio patch in isolation limits quality.</p>
+    <p style="margin-top:12px">We present <b>LiveFoley</b>, a plug-and-play sound engine for interactive worlds. For <b>imperceptible latency</b>, LiveFoley reaches an end-to-end latency of 156&nbsp;ms on a single A800 GPU, below the human perceptual threshold. For <b>precise alignment</b>, a Trailing Sliding Window turns off-the-shelf segment-level encoders into streaming modules without retraining and matches offline models in temporal alignment (DeSync 0.48 vs. 0.47) at a 0.08&nbsp;s frontend look-ahead. For <b>audio quality</b>, we widen the denoising window of the local diffusion head: History LocDiT, the default, adds past context at no latency cost, while the optional Future-Warmup LocDiT breaks an autoregressive deadlock to further improve quality at a 0.08&nbsp;s backend look-ahead. In addition, a Unified Varhop Framework lets one model <b>adapt its latency to the scene</b>, and LiveFoley generalizes to AR/VR and game-engine footage with stable long-form generation.</p>
   </div>
 
   <div class="contrib">
@@ -1158,12 +1160,12 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
     <div class="c">
       <div class="k">Adaptive latency</div>
       <h4>Unified Varhop Framework</h4>
-      <p><b>One model, several latency budgets.</b> A Synchronizer aligns tokens from different hop sizes, so a single set of weights switches between a tight hop for shooter games and a wide hop for free roaming. It matches single-hop experts in alignment and cuts visual frontend compute by up to 4&times;.</p>
+      <p><b>One model, several latency budgets.</b> A Synchronizer aligns tokens from different hop sizes, so a single set of weights can switch between a small hop for shooter games and a large hop for free roaming. The unified model matches single-hop experts in alignment and cuts visual frontend compute by up to 4&times;.</p>
     </div>
     <div class="c">
       <div class="k">Audio backend</div>
-      <h4>Future-Warmup LocDiT</h4>
-      <p><b>Cross-patch denoising under strict causality.</b> The future LM state is not yet available, but the next visual token is already buffered. Pairing it with the current hidden state pulls the upcoming patch into the denoising window, giving LiveFoley the best audio quality among streaming systems.</p>
+      <h4>History &amp; Future-Warmup LocDiT</h4>
+      <p><b>Widening the denoising window.</b> History LocDiT adds past patches as context at no latency cost and is the default. Including the upcoming patch causes an autoregressive deadlock, since its condition depends on the current patch. The optional Future-Warmup LocDiT approximates this condition with the current hidden state and the next visual token, further improving quality at a 0.08&nbsp;s backend look-ahead.</p>
     </div>
   </div>
 </div>
@@ -1175,9 +1177,9 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   <h2 class="sec-title">Method</h2>
   <!-- lead follows the active 3D card (selected, else nearest to the pointer, else data-near); one span per card, in card order -->
   <p class="sec-lead s3d-leads">
-    <span>How much delay can a listener tolerate? A lag becomes noticeable at about 0.35&nbsp;s for action sounds, 0.5&nbsp;s for speech and over 1&nbsp;s for ambience during free roaming. Meanwhile, shrinking a chunked window to cut latency sharply hurts alignment, while our trailing sliding window does not.</span>
-    <span>Segment-level alignment at frame-level latency: anchoring the window tail to the current frame decouples look-ahead from the receptive field, so delay drops to one hop with no retraining of the encoder. A Synchronizer lets one model switch among hop sizes.</span>
-    <span>The future LM state is unavailable, but the next visual token is already buffered. Future-Warmup LocDiT pairs the two to pull the upcoming patch into the current denoising window, bringing cross-patch collaborative denoising into a strictly causal model.</span>
+    <span>How much delay can a listener tolerate? In our user study, a lag becomes noticeable at about 0.34&nbsp;s for action sounds, 0.49&nbsp;s for speech and 0.85&nbsp;s for ambience during free roaming. Shrinking a chunked window to cut latency, however, sharply hurts alignment, whereas our trailing sliding window does not.</span>
+    <span>Segment-level alignment at frame-level latency: anchoring the window tail to the current frame decouples the frontend look-ahead from the receptive field, so it drops to one hop without retraining the encoder. A Synchronizer lets one model switch among hop sizes.</span>
+    <span>We widen the denoising window of LocDiT beyond a single patch. History LocDiT adds past patches as context at no latency cost and is the default. The optional Future-Warmup LocDiT brings the upcoming patch into the window by conditioning it on the current hidden state and the next visual token, further improving quality at a 0.08&nbsp;s backend look-ahead.</span>
   </p>
 
   <!-- 3D stage (generic .s3d component, see stage3d() in the script): selecting a card brings it
@@ -1185,15 +1187,15 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   <div class="s3d" data-kind="Figure" data-hr="0.41" data-near="1">
     <div class="s3d-scene">
       <div class="s3d-item" data-zoom="static/figs/motivation.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/motivation.png" width="1713" height="844" alt="User study of perceptual delay thresholds and empirical study of streaming visual frontends" loading="lazy"></div>
+        <div class="s3d-body"><img src="static/figs/sm/motivation.png" width="1737" height="878" alt="User study of perceptual delay thresholds and empirical study of streaming visual frontends" loading="lazy"></div>
         <img class="s3d-thumb" src="static/figs/th/motivation.jpg" alt="" loading="lazy"><span class="s3d-name">Motivation</span>
         <button type="button" class="s3d-hit" aria-controls="method-panel" aria-label="Motivation figure"></button></div></div>
       <div class="s3d-item" data-zoom="static/figs/frontend.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/frontend.png" width="2867" height="1026" alt="Chunked window vs trailing sliding window vs unified varhop" loading="lazy"></div>
+        <div class="s3d-body"><img src="static/figs/sm/frontend.png" width="2850" height="1026" alt="Chunked window vs trailing sliding window vs unified varhop" loading="lazy"></div>
         <img class="s3d-thumb" src="static/figs/th/frontend.jpg" alt="" loading="lazy"><span class="s3d-name">Visual frontend</span>
         <button type="button" class="s3d-hit" aria-controls="method-panel" aria-label="Streaming visual frontend figure"></button></div></div>
       <div class="s3d-item" data-zoom="static/figs/backend.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/backend.png" width="2902" height="1273" alt="Continuous AR backbone with Future-Warmup LocDiT" loading="lazy"></div>
+        <div class="s3d-body"><img src="static/figs/sm/backend.png" width="2887" height="1284" alt="Continuous AR backbone with Independent, History and Future-Warmup LocDiT" loading="lazy"></div>
         <img class="s3d-thumb" src="static/figs/th/backend.jpg" alt="" loading="lazy"><span class="s3d-name">Audio backend</span>
         <button type="button" class="s3d-hit" aria-controls="method-panel" aria-label="Audio backend figure"></button></div></div>
       <span class="s3d-lbl" aria-hidden="true">Motivation</span><span class="s3d-lbl" aria-hidden="true">Streaming visual frontend</span><span class="s3d-lbl" aria-hidden="true">Audio backend</span>
@@ -1205,17 +1207,17 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
       <div class="s3d-texts" id="method-panel" aria-live="polite">
       <article class="s3d-text" hidden>
         <h3>Motivation</h3>
-        <p class="cap"><b>Motivation.</b> (a) User study: the perceptual delay threshold by scenario (mean &plusmn; std over participants and clips). (b) On the V-AURA backbone, the chunked window cuts latency by shrinking the window <i>w</i> at a sharp cost in alignment, while our trailing sliding window shortens the hop <i>s</i> and preserves alignment.</p>
+        <p class="cap"><b>Motivation.</b> (a) User study: the minimum audio delay at which participants notice the sound lagging behind the video, for action sounds, speech and ambient sounds in free roaming (mean &plusmn; 95% CI). (b) On the V-AURA backbone, the chunked window cuts latency by shrinking the window <i>w</i> at a sharp cost in alignment, while our trailing sliding window shortens the hop <i>s</i> and preserves alignment.</p>
       </article>
       <article class="s3d-text" hidden>
         <h3>Streaming visual frontend</h3>
-    <p>In streaming, a segment-level encoder such as Synchformer can only encode a segment after it has fully arrived, so its long receptive field translates directly into look-ahead delay. The <b>trailing sliding window</b> anchors the window tail to the current frame: look-ahead is reduced to the hop size <i>s</i> (0.08, 0.16 or 0.32&nbsp;s) while the full temporal context remains intact. The <b>Unified Varhop Framework</b> uses a Synchronizer to unify these latency modes in a single model.</p>
+    <p>In streaming, a segment-level encoder such as Synchformer can encode a segment only after it has fully arrived, so its long receptive field translates directly into frontend look-ahead. The <b>trailing sliding window</b> anchors the window tail to the current frame: the frontend look-ahead drops to one hop (<i>s</i>&nbsp;=&nbsp;1, 2 or 4 tokens, i.e., 0.08, 0.16 or 0.32&nbsp;s) while the full temporal context is kept. The <b>Unified Varhop Framework</b> uses a Synchronizer to support all these latency modes in a single model.</p>
         <p class="cap"><b>Streaming visual frontend.</b> (a) Chunked window: a smaller <i>w</i> lowers latency but narrows the receptive field. (b) Trailing sliding window: look-ahead drops to one hop while the full receptive field <i>w</i> is preserved. (c) Unified Varhop: a Synchronizer maps tokens from different hop sizes into a shared latent space.</p>
       </article>
       <article class="s3d-text" hidden>
         <h3>Continuous autoregressive backend</h3>
-    <p>At each 12.5&nbsp;Hz step, a causal LM produces a hidden state <i>h<sub>i</sub></i>, on which LocDiT denoises the current patch; standard streaming models denoise each patch in isolation. <b>Future-Warmup LocDiT</b> pulls the upcoming patch into the same window, conditioned on <i>h<sub>i</sub></i> and the already-buffered visual token <i>v<sub>i+1</sub></i>. At inference this warmup patch is discarded and regenerated with the true <i>h<sub>i+1</sub></i>, so streaming causality is preserved.</p>
-        <p class="cap"><b>Audio backend.</b> Left: the causal LM fuses the current visual token and the LocEnc embedding of the previous patch into <i>h<sub>i</sub></i>. Right: Future-Warmup LocDiT jointly denoises patches <i>i</i> and <i>i+1</i> with the clean patch <i>i&minus;1</i> as context; patch <i>i+1</i> is discarded at inference.</p>
+    <p>At each 12.5&nbsp;Hz step, a causal LM produces a hidden state <i>h<sub>i</sub></i>, and LocDiT denoises the current patch conditioned on it. Prior streaming V2A models denoise each patch in isolation; we widen the denoising window in two directions. <b>History LocDiT</b>, our default, adds previously generated clean patches as context and improves quality at no latency cost. Toward the future, the upcoming patch cannot simply join the window, since its condition depends on the current patch, which is still being denoised. <b>Future-Warmup LocDiT</b> breaks this autoregressive deadlock by conditioning the upcoming patch on <i>h<sub>i</sub></i> and the next visual token <i>v<sub>i+1</sub></i>; at inference, this warmup patch is discarded and regenerated with the true <i>h<sub>i+1</sub></i>. This option further improves quality at the cost of a 0.08&nbsp;s backend look-ahead.</p>
+        <p class="cap"><b>Audio backend.</b> Left: the causal LM fuses the current visual token and the LocEnc embedding of the previous clean patch into <i>h<sub>i</sub></i>; conditioned on it, Independent LocDiT denoises the current patch in isolation. Right: History LocDiT (top) adds clean patches <i>i&minus;2</i> and <i>i&minus;1</i> as context without backend look-ahead. Future-Warmup LocDiT (bottom) jointly denoises patch <i>i</i> and a warmup patch <i>i+1</i>, which is conditioned on <i>h<sub>i</sub></i> and <i>v<sub>i+1</sub></i> and discarded at inference; waiting for <i>v<sub>i+1</sub></i> costs 0.08&nbsp;s of backend look-ahead.</p>
       </article>
       </div>
     </div>
@@ -1229,54 +1231,56 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   <h2 class="sec-title">Results</h2>
   <!-- lead follows the active 3D card (see Method) -->
   <p class="sec-lead s3d-leads">
-    <span>Alignment on par with offline models at a 0.08&nbsp;s look-ahead: DeSync 0.48 vs. 0.47 for the offline MMAudio-L, far ahead of V-AURA (0.69), WorldSonus (0.67) and SoundReactor (1.03). LiveFoley also has the best audio quality among streaming systems and the highest PQ of all systems.</span>
-    <span>In a listening test on 16 clips, LiveFoley outperforms all online baselines on both quality (MOS-Q 3.23 vs. 2.79 / 2.75 / 3.04) and alignment (MOS-A 3.58 vs. 3.15 / 3.02 / 2.96), and approaches the offline MMAudio-L in alignment (3.79).</span>
-    <span>Taking the 0.16&nbsp;s mode as an example, LiveFoley reaches a TTFF of 236&nbsp;ms on a single A800 GPU, below the 0.35&nbsp;s perceptual threshold of action sounds. All compute stages together take under 80&nbsp;ms; the rest is the algorithmic wait for one hop of video. Sustained generation runs faster than real time at an RTF of 0.49.</span>
+    <span>Temporal alignment on par with offline models at a 0.08&nbsp;s frontend look-ahead: DeSync 0.48 (LiveFoley-48k) vs. 0.47 for the offline MMAudio-L, far ahead of MMAudio (online) (0.71), V-AURA (0.69), WorldSonus (0.67) and SoundReactor (1.03). LiveFoley also has the best audio quality among streaming systems and the highest PQ of all systems (6.26).</span>
+    <span>In a listening test on 16 clips, LiveFoley outperforms all online baselines (MMAudio (online) / V-AURA / WorldSonus) on both quality (MOS-Q 3.23 vs. 2.79 / 2.75 / 3.04) and alignment (MOS-A 3.58 vs. 3.15 / 3.02 / 2.96), and approaches the offline MMAudio-L in alignment (3.79).</span>
+    <span>At hop size <i>s</i>&nbsp;=&nbsp;1, LiveFoley reaches an end-to-end latency of 156&nbsp;ms on a single A800 GPU, and the optional Future-Warmup LocDiT adds a further 0.08&nbsp;s (an estimated 236&nbsp;ms); both remain below the human perceptual threshold. All compute stages together take under 80&nbsp;ms; the rest is the algorithmic wait for one hop of video.</span>
   </p>
 
   <!-- same 3D stage component as Method -->
+  <!-- data-hr back to 0.5 (2026-10-16): text-conditioning rows removed from the table (owner) -->
   <div class="s3d" data-kind="Panel" data-hr="0.5" data-near="1">
     <div class="s3d-scene">
       <div class="s3d-item"><div class="s3d-card">
   <div class="s3d-body"><div class="tbl-wrap">
   <table>
     <thead>
-      <tr class="grp"><th colspan="3"></th><th colspan="3">Distribution matching</th><th colspan="2">Audio quality</th><th colspan="2">Alignment</th></tr>
-      <tr><th>Type</th><th>Method</th><th>Look-ahead (s)</th><th>FD<sub>PANNs</sub> &darr;</th><th>FD<sub>PaSST</sub> &darr;</th><th>KL<sub>PANNs</sub> &darr;</th><th>IS &uarr;</th><th>PQ &uarr;</th><th>DeSync &darr;</th><th>IB &uarr;</th></tr>
+      <tr class="grp"><th colspan="3"></th><th colspan="3">Distribution matching</th><th colspan="2">Audio quality</th><th colspan="2">Modality alignment</th></tr>
+      <tr><th>Type</th><th>Method</th><th>Frontend look-ahead (s)</th><th>FD<sub>PANNs</sub> &darr;</th><th>FD<sub>PaSST</sub> &darr;</th><th>KL<sub>PANNs</sub> &darr;</th><th>IS &uarr;</th><th>PQ &uarr;</th><th>DeSync &darr;</th><th>IB &uarr;</th></tr>
     </thead>
     <tbody>
       <tr><td class="ty" rowspan="3">Offline</td><td class="m">Frieren</td><td>8.00</td><td class="u">12.13</td><td>123.75</td><td class="u">2.73</td><td>11.32</td><td>5.82</td><td class="u">0.86</td><td>0.21</td></tr>
       <tr><td class="m">AudioX</td><td>10.00</td><td>12.73</td><td class="u">121.82</td><td>2.96</td><td class="b">13.34</td><td class="u">6.17</td><td>1.22</td><td class="u">0.24</td></tr>
       <tr><td class="m">MMAudio-L</td><td>8.00</td><td class="b">8.48</td><td class="b">74.16</td><td class="b">2.18</td><td class="u">11.62</td><td class="b">6.18</td><td class="b">0.47</td><td class="b">0.31</td></tr>
-      <tr class="sep"><td class="ty" rowspan="6">Online</td><td class="m">MMAudio (online)</td><td>0.64</td><td>9.82</td><td>175.92</td><td class="b">2.11</td><td>10.11</td><td>5.93</td><td>0.71</td><td>0.29</td></tr>
-      <tr><td class="m">V-AURA</td><td>0.64</td><td>16.43</td><td>245.25</td><td class="u">2.28</td><td>10.82</td><td>5.74</td><td>0.69</td><td>0.28</td></tr>
+      <tr class="sep"><td class="ty" rowspan="6">Online</td><td class="m">MMAudio (online)</td><td>0.64</td><td class="u">9.82</td><td>175.92</td><td class="b">2.11</td><td>10.11</td><td>5.93</td><td>0.71</td><td class="u">0.29</td></tr>
+      <tr><td class="m">V-AURA</td><td>0.64</td><td>16.43</td><td>245.25</td><td>2.28</td><td>10.82</td><td>5.74</td><td>0.69</td><td>0.28</td></tr>
       <tr class="quoted"><td class="m">SoundReactor<sup>&dagger;</sup></td><td>0.08</td><td>&ndash;</td><td>113.00</td><td>2.37</td><td>&ndash;</td><td>&ndash;</td><td>1.03</td><td>0.24</td></tr>
       <tr><td class="m">WorldSonus</td><td>0.10</td><td>16.32</td><td>197.68</td><td>2.54</td><td>8.73</td><td>6.11</td><td>0.67</td><td>0.26</td></tr>
-      <tr class="ours"><td class="m">LiveFoley-16k</td><td>0.08</td><td class="b">9.06</td><td class="b">85.62</td><td>2.33</td><td class="b">11.45</td><td class="b">6.39</td><td class="u">0.50</td><td class="u">0.29</td></tr>
-      <tr class="ours"><td class="m">LiveFoley-48k</td><td>0.08</td><td class="u">9.26</td><td class="u">120.76</td><td>2.31</td><td class="u">11.22</td><td class="u">6.35</td><td class="b">0.48</td><td class="b">0.29</td></tr>
+      <!-- LiveFoley rows = History LocDiT, s=1 (paper tab:main, 2026-10-16) -->
+      <tr class="ours"><td class="m">LiveFoley-16k</td><td>0.08</td><td class="b">9.56</td><td class="b">92.48</td><td class="u">2.24</td><td class="u">11.30</td><td class="u">6.14</td><td class="u">0.50</td><td>0.29</td></tr>
+      <tr class="ours"><td class="m">LiveFoley-48k</td><td>0.08</td><td>9.92</td><td class="u">128.34</td><td>2.30</td><td class="b">11.42</td><td class="b">6.26</td><td class="b">0.48</td><td class="b">0.29</td></tr>
     </tbody>
   </table>
   </div></div>
-        <span class="s3d-name">Objective metrics</span>
+        <img class="s3d-thumb" src="static/figs/th/results_table.jpg" alt="" loading="lazy" style="object-position:left center"><span class="s3d-name">Objective metrics</span>
         <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Objective metrics: system-level comparison table"></button></div></div>
       <div class="s3d-item" data-zoom="static/figs/mos.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/mos.png" width="2516" height="725" alt="Mean opinion scores for quality and alignment" loading="lazy"></div>
+        <div class="s3d-body"><img src="static/figs/sm/mos.png" width="2535" height="796" alt="Mean opinion scores for quality and alignment" loading="lazy"></div>
         <img class="s3d-thumb" src="static/figs/th/mos.jpg" alt="" loading="lazy"><span class="s3d-name">Listening test</span>
         <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Listening test figure"></button></div></div>
       <div class="s3d-item"><div class="s3d-card">
     <div class="s3d-body"><div class="lat">
-      <h4>Where the 236 ms go</h4>
-      <p class="lat-sub">Time to first audio at hop <i>s</i>&nbsp;=&nbsp;2 (0.16&nbsp;s look-ahead), in ms.</p>
-      <div class="row"><span>Video buffer (one hop)</span><div class="t wait" style="width:100%"></div><span>160</span></div>
-      <div class="row"><span>Visual frontend</span><div class="t" style="width:11.3%"></div><span>18</span></div>
-      <div class="row"><span>LM step</span><div class="t" style="width:10.6%"></div><span>17</span></div>
-      <div class="row"><span>LocDiT denoise</span><div class="t" style="width:15.6%"></div><span>25</span></div>
-      <div class="row"><span>Causal VAE decode</span><div class="t" style="width:5%"></div><span>8</span></div>
-      <div class="row"><span>Pipeline overhead</span><div class="t" style="width:5%"></div><span>8</span></div>
-      <div class="total"><span>Time to first audio</span><em>236 ms</em></div>
+      <h4>Where the 156 ms go</h4>
+      <p class="lat-sub">End-to-end latency with History LocDiT at hop <i>s</i>&nbsp;=&nbsp;1 (0.08&nbsp;s frontend look-ahead), in ms.</p>
+      <div class="row"><span>Frontend look-ahead</span><div class="t wait" style="width:100%"></div><span>80</span></div>
+      <div class="row"><span>Visual frontend</span><div class="t" style="width:22.5%"></div><span>18</span></div>
+      <div class="row"><span>LM step</span><div class="t" style="width:21.3%"></div><span>17</span></div>
+      <div class="row"><span>LocDiT denoise</span><div class="t" style="width:31.3%"></div><span>25</span></div>
+      <div class="row"><span>Causal VAE decode</span><div class="t" style="width:10%"></div><span>8</span></div>
+      <div class="row"><span>Pipeline overhead</span><div class="t" style="width:10%"></div><span>8</span></div>
+      <div class="total"><span>End-to-end latency</span><em>156 ms</em></div>
     </div></div>
-        <span class="s3d-name">Latency</span>
-        <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Latency: where the 236 ms go"></button></div></div>
+        <img class="s3d-thumb" src="static/figs/th/latency.jpg" alt="" loading="lazy" style="object-position:left center"><span class="s3d-name">Latency</span>
+        <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Latency: where the 156 ms go"></button></div></div>
       <span class="s3d-lbl" aria-hidden="true">Objective metrics</span><span class="s3d-lbl" aria-hidden="true">Listening test</span><span class="s3d-lbl" aria-hidden="true">Latency</span>
     </div>
     <div class="s3d-panel">
@@ -1286,15 +1290,15 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
       <div class="s3d-texts" id="results-panel" aria-live="polite">
       <article class="s3d-text" hidden>
         <h3>Objective metrics</h3>
-        <p class="cap">System-level comparison on the VGGSound test set. Look-ahead is the visual buffer needed before a chunk or hop can be generated (WorldSonus: one 100&nbsp;ms chunk of three frames at 30&nbsp;fps); offline models see the entire clip. MMAudio (online) is our training-free online adaptation of MMAudio-L. Bold / underline: best / second best within each group. <sup>&dagger;</sup>Quoted from the original paper (no public checkpoint), not ranked.</p>
+        <p class="cap">System-level comparison on the VGGSound test set. Frontend look-ahead is the duration of video that must be buffered before the visual encoder can encode a new chunk or hop (WorldSonus: one 100&nbsp;ms chunk of three frames at 30&nbsp;fps); offline models see the entire clip. MMAudio (online) is our training-free online adaptation of MMAudio-L. Bold / underline: best / second best within each group. <sup>&dagger;</sup>Quoted from the original paper (no public checkpoint) under its own evaluation protocol; not ranked. Both LiveFoley variants use History LocDiT with hop size <i>s</i>&nbsp;=&nbsp;1.</p>
       </article>
       <article class="s3d-text" hidden>
         <h3>Listening test</h3>
-        <p class="cap"><b>Listening test</b> on the 16 clips in the <a href="#compare">comparison below</a> (5-point scale, 95% CI). LiveFoley leads all online systems on quality and alignment; WorldSonus runs at a comparable look-ahead (0.10&nbsp;s) yet trails most clearly in alignment. LiveFoley approaches the offline MMAudio-L in alignment (3.58 vs. 3.79), while a quality gap remains (3.23 vs. 3.62).</p>
+        <p class="cap"><b>Listening test</b> on the 16 clips in the <a href="#compare">comparison below</a> (5-point scale; the dashed line separates offline from online systems). LiveFoley leads all online systems on quality and alignment; WorldSonus runs at a comparable frontend look-ahead (0.10&nbsp;s) but trails LiveFoley most clearly in alignment. LiveFoley approaches the offline MMAudio-L in alignment (3.58 vs. 3.79) but still trails it in quality (3.23 vs. 3.62).</p>
       </article>
       <article class="s3d-text" hidden>
         <h3>Latency</h3>
-        <p class="cap">Single A800, measured with a simulator that releases frames at 25&nbsp;fps. The video buffer of the hop is an algorithmic wait that does not depend on hardware; all remaining stages are compute and together take under 80&nbsp;ms. Sustained generation runs faster than real time at an RTF of 0.49.</p>
+        <p class="cap">Measured on a single A800 with a simulator that releases frames at 25&nbsp;fps (History LocDiT, <i>s</i>&nbsp;=&nbsp;1). The frontend look-ahead of one hop is an algorithmic wait independent of hardware; the remaining compute stages together take under 80&nbsp;ms. The optional Future-Warmup LocDiT adds 0.08&nbsp;s of backend look-ahead, giving an estimated 236&nbsp;ms.</p>
       </article>
       </div>
     </div>
@@ -1310,7 +1314,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <canvas class="demo-bg idle" aria-hidden="true"></canvas>
 <div class="container">
   <h2 class="sec-title">Real-time Generation Demos</h2>
-  <p class="sec-lead">All audio below is generated in streaming mode by LiveFoley-48k (48&nbsp;kHz stereo) unless noted: one autoregressive step per 0.08&nbsp;s of video, with no access to future frames beyond the look-ahead. Please turn the sound on. <strong>To let you hear the real latency, the audio of every clip is deliberately delayed by 0.25&nbsp;s</strong>, the time to first audio of our streaming pipeline (236&nbsp;ms on one A800): the sound arrives exactly when it would in a live setting, so you can judge for yourself whether the lag is noticeable.</p>
+  <p class="sec-lead">Please turn the sound on. Unless noted, all audio below is generated in streaming mode by LiveFoley-48k (48&nbsp;kHz stereo): one autoregressive step per 0.08&nbsp;s of video, with no access to future frames beyond the look-ahead. Clips tagged <em>+ text</em> also receive a one-sentence text prompt (the optional text conditioning described in the paper). <strong>To let you hear the real latency, the audio of every clip is deliberately delayed by 0.25&nbsp;s</strong>. This exceeds the end-to-end latency of our streaming pipeline on one A800 (156&nbsp;ms by default; an estimated 236&nbsp;ms with the optional Future-Warmup LocDiT), so the sound arrives no earlier than it would in a live setting and you can judge for yourself whether the lag is noticeable.</p>
 
   <!-- Demo "worlds" as floating crystal orbs (desktop >=861px; owner 2026-10-09). Intro: three orbs float under the lead.
        Click: the world blooms out of the orb (clip-path circle) and the orbs dock on the right edge (sticky column);
@@ -1381,7 +1385,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
       <video controls playsinline preload="none"></video>
       <div class="stage-body">
         <div><div class="kicker" id="ego-kicker"></div><h4 id="ego-title"></h4><p id="ego-sub"></p></div>
-        <div class="chips"><span class="chip ours" id="ego-model">LiveFoley</span><span class="chip ttl" id="ego-ttl"></span><span class="chip" id="ego-dur"></span><span class="chip delay" title="Audio deliberately delayed by 0.25 s, the real time to first audio">0.25 s delay</span></div>
+        <div class="chips"><span class="chip ours" id="ego-model">LiveFoley</span><span class="chip ttl" id="ego-ttl"></span><span class="chip" id="ego-dur"></span><span class="chip delay" title="Audio deliberately delayed by 0.25 s, above the real end-to-end latency (156 ms by default)">0.25 s delay</span></div>
       </div>
     </article>
   </div>
@@ -1404,7 +1408,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <canvas class="demo-bg idle" aria-hidden="true"></canvas>
 <div class="container">
   <h2 class="sec-title">Comparison with Baselines</h2>
-  <p class="sec-lead">The 16 clips from our listening test. Each card plays one silent video; click a system to hear its audio from the start, click again to pause. Every system gets the same video as its only input; outputs are trimmed to 8&nbsp;s and loudness-normalized to &minus;23&nbsp;LUFS. Offline models see the whole clip before generating; online (streaming) models generate while the video arrives.</p>
+  <p class="sec-lead">The 16 clips from our listening test. Each card plays one silent video; click a system to hear its audio from the start, and click again to pause. Every system receives the same video as its only input; outputs are trimmed to 8&nbsp;s and loudness-normalized to &minus;23&nbsp;LUFS. Offline models see the whole clip before generating; online (streaming) models generate while the video arrives.</p>
   <div class="tabs" id="cmp-tabs"></div>
   <div class="cmp-grid" id="cmp-grid"></div>
   <button type="button" class="more-btn" id="cmp-more" aria-controls="cmp-grid" aria-expanded="false" hidden></button>
@@ -1441,7 +1445,7 @@ const Warm = (() => {
     if (!on || !mp4 || seen.has(mp4)) return; seen.add(mp4);
     try { fetch(mp4, { headers: { Range: `bytes=0-${HEAD - 1}` }, priority: 'low' }).catch(() => {}); } catch (_) {}
     new Image().src = `${PH}${id}.jpg`;
-    if (mel) new Image().src = `static/mel/${id}.png?v=4`;
+    if (mel) new Image().src = `static/mel/${id}.png?v=7`;
   };
   const reg = {};                                   // world / album key -> [clip warmers in display order]
   return { clip, reg, on,
@@ -1476,20 +1480,22 @@ const DEMOS = {
     ['game_-xFogx66VHY_scene-334_s303','Desert dunes','dusk &middot; 8 s',1],
     ['game_4keUlXV_z5w_scene-147_s11','Night freeway','city skyline &middot; 8 s',1],
   ],
-  /* HD gameplay (1080p): 16 kHz mono gameplay variant, long-stream ring decode; [file, title, sub, model chip]
-     source = demo_gvt2a_full/v2a_hd (owner-picked seeds, owner-adjusted audio); VR clips of the same set sit in the AR/VR tab */
+  /* HD gameplay (1080p): 16 kHz mono gameplay variant, long-stream ring decode; [file, title, sub, model chip, videos subdir]
+     source = demo_gvt2a_full/v2a_hd (owner-picked seeds, owner-adjusted audio); VR clips of the same set sit in the AR/VR tab.
+     2026-10-15 owner A/B (compare_16k_vs_48k/): 6 clips replaced by LiveFoley-48k (w48kvt 270k, k_inf 0.15, 48 kHz stereo) in
+     static/videos/gamehd48/ (same HD video, audio delayed 0.25 s); old 16k mel sheets kept in static/mel_16k_bak/ */
   gamehd: [
-    ['driving__long_sports_08','Stunt motorbike','HD gameplay &middot; + text &middot; engine roar, boost, crash &middot; 25 s','LiveFoley-16k + text'],   // trimmed to the first 25 s (owner 2026-10-10; 32 s original in scratchpad orig_videos/)
-    ['driving__16s_driving_07','Police chase','HD gameplay &middot; + text &middot; siren, engine, brakes &middot; 16 s','LiveFoley-16k + text'],
+    ['driving__long_sports_08','Stunt motorbike','HD gameplay &middot; + text &middot; engine roar, boost, crash &middot; 25 s','LiveFoley-48k + text','gamehd48'],   // 48k s33 (owner pick 2026-10-15); trimmed to the first 25 s (owner 2026-10-10; 32 s original in scratchpad orig_videos/)
+    ['driving__16s_driving_07','Police chase','HD gameplay &middot; + text &middot; siren, engine, brakes &middot; 16 s','LiveFoley-48k + text','gamehd48'],   // 48k s11
     ['driving__16s_driving_02','Night patrol','HD gameplay &middot; siren, engine &middot; 16 s'],
-    ['shooter__long_shooter_10','Street shootout','HD gameplay &middot; automatic fire, reloads &middot; 32 s'],
-    ['shooter__long_shooter_08','Sniper range','HD gameplay &middot; rifle cracks, bolt action &middot; 29 s'],
-    ['shooter__16s_sports_10','Horror shooter','HD gameplay &middot; corridor, gunshots &middot; 16 s'],
+    ['shooter__long_shooter_10','Street shootout','HD gameplay &middot; automatic fire, reloads &middot; 32 s','LiveFoley-48k','gamehd48'],   // 48k s22
+    ['shooter__long_shooter_08','Sniper range','HD gameplay &middot; rifle cracks, bolt action &middot; 29 s','LiveFoley-48k','gamehd48'],   // 48k s22
+    ['shooter__16s_sports_10','Horror shooter','HD gameplay &middot; corridor, gunshots &middot; 16 s','LiveFoley-48k','gamehd48'],   // 48k s22
     ['roam__long_roam_07','Dungeon run','HD gameplay &middot; footsteps on stone &middot; 32 s'],
-    ['roam__16s_roam_07','Dungeon walk','HD gameplay &middot; + text &middot; footsteps, gear &middot; 16 s','LiveFoley-16k + text'],
+    ['roam__16s_roam_07','Dungeon walk','HD gameplay &middot; + text &middot; footsteps, gear &middot; 16 s','LiveFoley-48k + text','gamehd48'],   // 48k s11
     ['ui__long_ui_04','Casual mobile game','HD gameplay &middot; reward chimes, card shuffles &middot; 31 s'],
     ['ui__long_ui_01','Adventure inventory','HD gameplay &middot; menu beeps, ambience &middot; 32 s'],
-    ['ui__long_shooter_05','Match-3 puzzle','HD gameplay &middot; pops, shatters, chimes &middot; 32 s'],
+    ['ui__long_shooter_05','Match-3 puzzle','HD gameplay &middot; pops, shatters, chimes &middot; 32 s'],   // owner 2026-10-15: back to 16k (48k s11 copy left unused in gamehd48/)
     ['ui__long_shooter_07','Retro arcade shooter','HD gameplay &middot; 8-bit blips, laser fire &middot; 32 s'],
   ],
   fail: [
@@ -1580,7 +1586,7 @@ function playerExtras(st, v, opt = {}) {
     const img = new Image();
     img.onload = () => { if (name === n) { sheet = img; status(); draw(); } };
     img.onerror = () => { if (name === n) { failed = true; status(); } };
-    img.src = `static/mel/${n}.png?v=4`;          // bump when the sheets are regenerated
+    img.src = `static/mel/${n}.png?v=7`;          // bump when the sheets are regenerated (v7: 6 gamehd48 clips, Match-3 back to 16k, 2026-10-15)
   }
   ['loadstart', 'loadedmetadata'].forEach(ev => v.addEventListener(ev, load));
   ['play', 'playing'].forEach(ev => v.addEventListener(ev, kick));
@@ -1680,7 +1686,7 @@ function makeGallery(root, dir, list, label, cats) {
       `<img src="${P}${f}.jpg" alt="" loading="lazy"><span><span class="k">${String(k + 1).padStart(2, '0')}</span><b>${t}</b><small>${clean(sub)}</small></span></button>`).join('') +
     `</div><article class="stage" id="${gid}-stage" role="tabpanel"><video controls playsinline preload="none"></video>` +
     `<div class="stage-body"><div><div class="kicker"></div><h4></h4><p></p></div>` +
-    `<div class="chips"><span class="chip ours"></span><span class="chip ttl"></span><span class="chip dur"></span><span class="chip delay" title="Audio deliberately delayed by 0.25 s, the real time to first audio">0.25 s delay</span></div></div></article>`;
+    `<div class="chips"><span class="chip ours"></span><span class="chip ttl"></span><span class="chip dur"></span><span class="chip delay" title="Audio deliberately delayed by 0.25 s, above the real end-to-end latency (156 ms by default)">0.25 s delay</span></div></div></article>`;
   const tabs = [...root.querySelectorAll('[role="tab"]')], v = root.querySelector('video'), st = root.querySelector('.stage');
   const kick = st.querySelector('.kicker'), h = st.querySelector('h4'), p = st.querySelector('p'), model = st.querySelector('.chip.ours'), dur = st.querySelector('.chip.dur');
   list.forEach((x, k) => { const key = cats ? 'game:' + x[6] : root.dataset.gal;
@@ -1836,9 +1842,14 @@ function stripScroll(l) {
       setTimeout(() => {
         if (l.scrollLeft > 2 || l.classList.contains('dragging')) return;
         const t0 = performance.now(), D = 1300, A = Math.min(90, l.scrollWidth - l.clientWidth);
+        /* stop the hint the moment the user touches / scrolls the strip, so it never fights a real swipe
+           (owner 2026-10-11: swipes felt heavy on phones) */
+        let stop = false, set = l.scrollLeft;
+        const quit = () => { stop = true; };
+        ['touchstart', 'pointerdown', 'wheel'].forEach(ev => l.addEventListener(ev, quit, { once: true, passive: true }));
         const f = now => { const t = Math.min(1, (now - t0) / D), y = Math.sin(Math.PI * t) * Math.pow(1 - t, .35);
-          if (l.classList.contains('dragging')) return;
-          l.scrollLeft = A * y; if (t < 1) requestAnimationFrame(f); else l.scrollLeft = 0; };
+          if (stop || l.classList.contains('dragging') || Math.abs(l.scrollLeft - set) > 1.5) return;
+          set = t < 1 ? A * y : 0; l.scrollLeft = set; if (t < 1) requestAnimationFrame(f); };
         requestAnimationFrame(f);
       }, 700);
     }, { threshold: .9 });
@@ -1864,7 +1875,9 @@ function stripScroll(l) {
   const kick = () => { l.classList.add('gliding'); if (!raf) { loop.t = 0; raf = requestAnimationFrame(loop); } };
   l.addEventListener('dragstart', e => e.preventDefault());
   l.addEventListener('pointerdown', e => {
-    if (e.button !== 0 || !isStrip()) return;
+    /* mouse only: on touch screens the browser's own momentum scrolling is used; the manual drag fought it and
+       made swipes feel heavy (owner 2026-10-11) */
+    if (e.pointerType !== 'mouse' || e.button !== 0 || !isStrip()) return;
     x0 = lastX = e.clientX; s0 = l.scrollLeft; id = e.pointerId; drag = false; vel = 0; lastT = performance.now();
   });
   l.addEventListener('pointermove', e => {
@@ -1901,7 +1914,8 @@ const G = k => document.querySelector(`.gallery[data-gal="${k}"]`);
 makeGallery(G('wild'), 'wild', DEMOS.wild, 'In the wild (VGGSound)');
 {
   /* Game tab, grouped by play type (owner 2026-10-09); each category keeps this order. Rows: [file, title, sub, 0, dir, model, cat] */
-  const CATS = [['roam', 'Roaming', 'footsteps, ambience'], ['drive', 'Driving', 'engines, sirens'], ['shoot', 'Shooting', 'gunfire, reloads'], ['ui', 'UI &amp; casual', 'menus, chimes']];
+  /* owner 2026-10-15: UI & casual first, so the player starts on its clip 1 (Casual mobile game) */
+  const CATS = [['ui', 'UI &amp; casual', 'menus, chimes'], ['roam', 'Roaming', 'footsteps, ambience'], ['drive', 'Driving', 'engines, sirens'], ['shoot', 'Shooting', 'gunfire, reloads']];
   const ORDER = {
     roam: ['game_W2A_PcIhUVM_scene-149_s404', 'game_-xFogx66VHY_scene-334_s303','game_6rALm87VODU_scene-44_s101', 'roam__long_roam_07', 'roam__16s_roam_07', 'game_WeeWIjPb9nM_scene-195_s303', 'game_5wUecxcGCGI_scene-1179_s404', 'game_2zJGEdY3I4c_scene-73_s303', 'game_4I1MBmrGloU_scene-29_s101', 'game_4keUlXV_z5w_scene-147_s11'],   // 3D platformer removed; City drive moved here (owner 2026-10-09)
     drive: ['driving__long_sports_08', 'driving__16s_driving_07', 'driving__16s_driving_02'],   // Monster truck removed (low resolution, owner 2026-10-09)
@@ -1909,7 +1923,7 @@ makeGallery(G('wild'), 'wild', DEMOS.wild, 'In the wild (VGGSound)');
     ui: ['ui__long_ui_04', 'ui__long_shooter_05', 'ui__long_shooter_07', 'ui__long_ui_01'],   // Rhythm game removed (owner 2026-10-09)
   };
   const pool = {};
-  DEMOS.gamehd.forEach(x => pool[x[0]] = [x[0], x[1], x[2], 0, 'gamehd', x[3]]);
+  DEMOS.gamehd.forEach(x => pool[x[0]] = [x[0], x[1], x[2], 0, x[4] || 'gamehd', x[3]]);   // x[4]: optional videos subdir (gamehd48 = owner-picked 48k replacements, 2026-10-15)
   DEMOS.game.forEach(x => pool[x[0]] = [x[0], x[1], x[2], 0, 'game']);
   DEMOS.scenery.forEach(x => pool[x[0]] = [x[0], x[1], x[2], 0, 'scenery']);
   const all = CATS.flatMap(([k]) => ORDER[k].filter(f => pool[f]).map(f => { const r = pool[f].slice(); r[6] = k; return r; }));
