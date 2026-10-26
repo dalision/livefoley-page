@@ -330,6 +330,8 @@ p.sub-desc{color:var(--text2);font-size:15px;max-width:1000px;margin-bottom:20px
 .authors{font-size:clamp(17px,1.45vw,20px);color:var(--text)}
 .authors a{color:var(--text);border-bottom:1px solid var(--border-strong);transition:border-color .15s}
 .authors a:hover{text-decoration:none;border-color:var(--accent)}
+.affils a{color:inherit;border-bottom:1px solid var(--border-strong);transition:border-color .15s}
+.affils a:hover{text-decoration:none;border-color:var(--accent)}
 .authors sup,.affils sup{font-size:.68em;color:var(--muted)}
 .affils{color:var(--muted);font-size:clamp(14.5px,1.15vw,16.5px);margin-top:8px}
 .authors{line-height:1.7}
@@ -1100,20 +1102,24 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   <h1><span class="live">Live</span>Foley</h1>
   <p class="subtitle">Dynamic Real-Time Video-to-Audio Generation <br>for Immersive Interactive Worlds</p>
 
-  <!-- anonymized for double-blind review (owner 2026-10-11); the original block is in _ref/authors_original.html -->
   <p class="authors">
-    <span class="au">Elmo Monster<sup>1</sup>,</span>
-    <span class="au">Big Bird<sup>2,&dagger;</sup>,</span>
-    <span class="au">Cookie Monster<sup>1,3</sup>,</span>
-    <span class="au">Bert Muppet<sup>4</sup>,</span>
-    <span class="au">Ernie Muppet<sup>4</sup>,</span><br class="br-wide">
-    <span class="au">Bunsen Honeydew<sup>5</sup>,</span>
-    <span class="au">Beaker<sup>5</sup>,</span>
-    <span class="au">Grover Monster<sup>2</sup>,</span>
-    <span class="au">Kermit T. Frog<sup>6</sup></span>
+    <span class="au"><a href="https://dalision.github.io/" target="_blank" rel="noopener">Yusheng Dai</a><sup>1,3</sup>,</span>
+    <span class="au"><a href="https://v-iashin.github.io/" target="_blank" rel="noopener">Vladimir Iashin</a><sup>4</sup>,</span>
+    <span class="au"><a href="https://dddpg.github.io/" target="_blank" rel="noopener">Kangdi Wang</a><sup>5</sup>,</span>
+    <span class="au"><a href="https://jiangyux25.github.io/" target="_blank" rel="noopener">Yuxuan Jiang</a><sup>6</sup>,</span>
+    <span class="au"><a href="https://ilpoviertola.github.io/" target="_blank" rel="noopener">Ilpo Viertola</a><sup>4</sup>,</span><br class="br-wide">
+    <span class="au"><a href="./">Weiqiang Wang</a><sup>1</sup>,</span>   <!-- no homepage: links back to this page -->
+    <span class="au"><a href="https://qiuhongke.github.io/" target="_blank" rel="noopener">Qiuhong Ke</a><sup>1</sup>,</span>
+    <span class="au"><a href="https://gracezhao1997.github.io/" target="_blank" rel="noopener">Min Zhao</a><sup>2,&dagger;</sup>,</span>
+    <span class="au"><a href="https://jianfei-cai.github.io/" target="_blank" rel="noopener">Jianfei Cai</a><sup>1</sup></span>
   </p>
-  <p class="affils"><span class="au"><sup>1</sup>Sesame Street University</span> <span class="au"><sup>2</sup>123 Sesame Institute</span> <span class="au"><sup>3</sup>Cookie Research Center</span><br class="br-wide"> <span class="au"><sup>4</sup>Rubber Duckie Lab</span> <span class="au"><sup>5</sup>Muppet Labs</span> <span class="au"><sup>6</sup>Fraggle Rock University</span></p>
+  <p class="affils"><span class="au"><sup>1</sup>Monash University</span> <span class="au"><sup>2</sup>Nanjing University</span> <span class="au"><sup>3</sup><a href="https://www.shengshu-ai.com/" target="_blank" rel="noopener">ShengShu Technology</a></span><br class="br-wide"> <span class="au"><sup>4</sup>Tampere University</span> <span class="au"><sup>5</sup>Alibaba Token Hub, Alibaba Group</span> <span class="au"><sup>6</sup>Tsinghua University</span></p>
   <p class="corr"><sup>&dagger;</sup>Corresponding author</p>
+  <div class="links">
+    <!-- TODO(arxiv): when announced, turn this into <a class="btn" href="https://arxiv.org/abs/..." target="_blank" rel="noopener"> and drop "(Coming Soon)" -->
+    <span class="btn soon" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>arXiv (Coming Soon)</span>
+    <span class="btn soon" aria-disabled="true"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>Code (Coming Soon)</span>
+  </div>
 
   <!-- jump buttons (CineDub style): click scrolls down to the section -->
   <nav class="hero-nav" aria-label="Page sections">
@@ -1124,8 +1130,6 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
     <a href="#compare"><span class="nav-arrow" aria-hidden="true">&darr;</span> Comparison</a>
     <div class="intro-load" hidden aria-hidden="true"><span class="il-track"><i></i></span><span class="il-txt">Preparing demos</span></div>
   </nav>
-
-  <!-- TODO(links): add Paper / arXiv / Code / Listen buttons when available (.links/.btn styles kept) -->
 
 </div>
 </header>
@@ -1194,9 +1198,9 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
         <div class="s3d-body"><img src="static/figs/sm/frontend.png" width="2850" height="1026" alt="Chunked window vs trailing sliding window vs unified varhop" loading="lazy"></div>
         <img class="s3d-thumb" src="static/figs/th/frontend.jpg" alt="" loading="lazy"><span class="s3d-name">Visual frontend</span>
         <button type="button" class="s3d-hit" aria-controls="method-panel" aria-label="Streaming visual frontend figure"></button></div></div>
-      <div class="s3d-item" data-zoom="static/figs/backend.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/backend.png" width="2887" height="1284" alt="Continuous AR backbone with Independent, History and Future-Warmup LocDiT" loading="lazy"></div>
-        <img class="s3d-thumb" src="static/figs/th/backend.jpg" alt="" loading="lazy"><span class="s3d-name">Audio backend</span>
+      <div class="s3d-item" data-zoom="static/figs/backend.png?v=1026"><div class="s3d-card">
+        <div class="s3d-body"><img src="static/figs/sm/backend.png?v=1026" width="2887" height="1235" alt="Continuous AR backbone with Independent, History and Future-Warmup LocDiT" loading="lazy"></div>
+        <img class="s3d-thumb" src="static/figs/th/backend.jpg?v=1026" alt="" loading="lazy"><span class="s3d-name">Audio backend</span>
         <button type="button" class="s3d-hit" aria-controls="method-panel" aria-label="Audio backend figure"></button></div></div>
       <span class="s3d-lbl" aria-hidden="true">Motivation</span><span class="s3d-lbl" aria-hidden="true">Streaming visual frontend</span><span class="s3d-lbl" aria-hidden="true">Audio backend</span>
     </div>
@@ -1263,9 +1267,9 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   </div></div>
         <img class="s3d-thumb" src="static/figs/th/results_table.jpg" alt="" loading="lazy" style="object-position:left center"><span class="s3d-name">Objective metrics</span>
         <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Objective metrics: system-level comparison table"></button></div></div>
-      <div class="s3d-item" data-zoom="static/figs/mos.png"><div class="s3d-card">
-        <div class="s3d-body"><img src="static/figs/sm/mos.png" width="2535" height="796" alt="Mean opinion scores for quality and alignment" loading="lazy"></div>
-        <img class="s3d-thumb" src="static/figs/th/mos.jpg" alt="" loading="lazy"><span class="s3d-name">Listening test</span>
+      <div class="s3d-item" data-zoom="static/figs/mos.png?v=1026"><div class="s3d-card">
+        <div class="s3d-body"><img src="static/figs/sm/mos.png?v=1026" width="2535" height="801" alt="Mean opinion scores for quality and alignment" loading="lazy"></div>
+        <img class="s3d-thumb" src="static/figs/th/mos.jpg?v=1026" alt="" loading="lazy"><span class="s3d-name">Listening test</span>
         <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Listening test figure"></button></div></div>
       <div class="s3d-item"><div class="s3d-card">
     <div class="s3d-body"><div class="lat">
