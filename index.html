@@ -991,6 +991,10 @@ td.u{text-decoration:underline;text-underline-offset:3px}
 pre.bib{background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;font:13.5px/1.6 "JetBrains Mono",monospace;overflow-x:hidden;position:relative;color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere}
 .copy{position:absolute;top:10px;right:10px;border:1px solid var(--border);background:#fff;border-radius:8px;padding:4px 10px;font:500 12.5px Inter,sans-serif;cursor:pointer;color:var(--text2)}
 footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px}
+.visit-stats{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 24px;margin-top:12px}
+.visit-stats>span{display:inline-flex;align-items:center;gap:6px}
+.visit-stats svg{width:15px;height:15px;flex:none}
+.visit-stats b{color:var(--accent);font-weight:600}
 
 /* lightbox */
 .lb{position:fixed;inset:0;background:rgba(255,255,255,.96);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
@@ -1421,8 +1425,15 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <!-- BibTeX section removed for double-blind review (owner 2026-10-11); original markup in _ref/authors_original.html -->
 
 <footer>
-  <div class="container">Videos are for research demonstration only. Game and third-party footage belongs to its respective owners; all audio on this page is model-generated.</div>
+  <div class="container">Videos are for research demonstration only. Game and third-party footage belongs to its respective owners; all audio on this page is model-generated.
+    <div class="visit-stats">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>Total Views: <b id="busuanzi_value_site_pv">&hellip;</b></span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Visitors: <b id="busuanzi_value_site_uv">&hellip;</b></span>
+    </div>
+  </div>
 </footer>
+<!-- visitor counter, same service as cinedub2026.github.io -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 <div class="lb" id="lb" onclick="this.classList.remove('on')" role="dialog" aria-label="Enlarged figure, click or press Escape to close"><img alt="Enlarged figure"></div>
 
@@ -2850,8 +2861,8 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
     const b = hero.querySelector('.hero-play'); if (b) b.hidden = true;
   };
   v.classList.add('on'); hero.classList.add('vid');           // hide the still while the video loads
-  /* intro lock (owner 2026-10-09): on a fresh visit at the top, scrolling stays locked until the clip has played,
-     which gives the demos below time to load; released early on any failure and after 17 s at most */
+  /* intro lock (owner 2026-10-09; 4 s since 2026-11-05): on a fresh visit at the top, scrolling stays locked for 4 s,
+     which gives the demos below time to load; released early on any failure */
   const root = document.documentElement, bar = hero.querySelector('.intro-load');
   /* first visit only: a refresh / return visit has the demos cached already, so it just plays the clip */
   let seen = false; try { seen = localStorage.getItem('lf-intro-seen') === '1'; localStorage.setItem('lf-intro-seen', '1'); } catch (_) {}
@@ -2870,8 +2881,10 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
     if (bar) bar.hidden = false;
     placeBar(); addEventListener('resize', placeBar); document.fonts && document.fonts.ready.then(placeBar);
     unlockIntro = unlock;
-    v.addEventListener('timeupdate', () => { if (bar && v.duration) bar.style.setProperty('--p', Math.min(1, v.currentTime / (v.duration - 1))); });
-    setTimeout(unlock, 17000);
+    const LOCK_MS = 4000, t0 = performance.now();
+    const fill = now => { if (!locked || !bar) return; bar.style.setProperty('--p', Math.min(1, (now - t0) / LOCK_MS)); requestAnimationFrame(fill); };
+    requestAnimationFrame(fill);
+    setTimeout(unlock, LOCK_MS);
     /* while the clip plays: the first 3 clips of every world and every Game album (after the clip has a head start) */
     setTimeout(warmFirst, 1500);
   }
