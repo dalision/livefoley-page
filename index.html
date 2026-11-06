@@ -323,6 +323,15 @@ p.sub-desc{color:var(--text2);font-size:15px;max-width:1000px;margin-bottom:20px
 .hero-play:hover svg{transform:rotate(-200deg)}
 .hero-play:focus-visible{outline:2px solid #111827;outline-offset:4px}
 .hero-play[hidden]{display:none}
+.hero-sound{position:absolute;right:calc(clamp(16px,2.4vw,40px) + 64px);bottom:calc(clamp(22px,4.5vh,48px) + 6px);z-index:3;height:40px;padding:0 16px;display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgb(var(--ink-rgb)/.14);border-radius:999px;cursor:pointer;color:var(--text);font:600 13px/1 Inter,system-ui,sans-serif;background:rgba(255,255,255,.72);backdrop-filter:blur(8px);transition:background .15s,transform .15s}
+.hero-sound:hover{background:rgba(255,255,255,.95);transform:translateY(-1px)}
+.hero-sound:focus-visible{outline:2px solid #111827;outline-offset:3px}
+.hero-sound[hidden]{display:none}
+.hero-sound svg{width:17px;height:17px}
+.hero-sound .wave{display:none}
+.hero-sound[aria-pressed="true"] .wave{display:inline}
+.hero-sound[aria-pressed="true"] .mute{display:none}
 .hero::before{transition:opacity .9s ease}
 .hero h1{font-size:clamp(56px,9vw,116px);font-weight:700;letter-spacing:-.015em;line-height:1.1}
 .hero h1 .live{color:var(--accent)}
@@ -991,6 +1000,8 @@ td.u{text-decoration:underline;text-underline-offset:3px}
 pre.bib{background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;font:13.5px/1.6 "JetBrains Mono",monospace;overflow-x:hidden;position:relative;color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere}
 .copy{position:absolute;top:10px;right:10px;border:1px solid var(--border);background:#fff;border-radius:8px;padding:4px 10px;font:500 12.5px Inter,sans-serif;cursor:pointer;color:var(--text2)}
 footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px}
+.ov-video{margin:64px auto 72px;max-width:880px}
+.ov-video video{display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;box-shadow:0 8px 28px rgb(var(--ink-rgb)/.10)}
 .visit-stats{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 24px;margin-top:12px}
 .visit-stats>span{display:inline-flex;align-items:center;gap:6px}
 .visit-stats svg{width:15px;height:15px;flex:none}
@@ -1098,8 +1109,9 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <!-- hero key-art video (Kling render, speed-ramped, no audio): desktop only, plays once and rests on its last
      frame; sources are attached by JS so phones / reduced-motion / failures keep the static hero_world.jpg -->
 <video class="hero-video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"
-       data-webm="static/videos/hero/hero_world.webm?v=11" data-mp4="static/videos/hero/hero_world.mp4?v=11"></video>
+       data-webm="static/videos/hero/hero_world.webm?v=12" data-mp4="static/videos/hero/hero_world.mp4?v=12"></video>
 <!-- bottom-left replay control (desktop, appears once the clip is running): restarts the clip from the beginning -->
+<button type="button" class="hero-sound" hidden aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="mute" d="m16 9.5 5 5M21 9.5l-5 5"/></svg><span>Mute</span></button>
 <button type="button" class="hero-play" hidden aria-label="Replay the background video" title="Replay"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 3.8v4.6h4.6"/><path d="M10.4 9.2v5.6l4.6-2.8z" fill="currentColor" stroke="none"/></svg></button>
 <div class="container">
   <!-- TODO(venue): add venue badge after acceptance -->
@@ -1157,6 +1169,12 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
     <p>Interactive worlds such as games, AR/VR and 3D engines need sound that reacts to every action as frames are rendered. Recent audio-visual world models generate synchronized audio, but their audio is tied to their own video generators and cannot serve external sources such as game-engine renders or live camera feeds. <b>Streaming video-to-audio (V2A)</b> offers a <b>source-agnostic</b> alternative by generating sound directly from any live pixel stream. To be a usable sound engine, however, it must meet three demands at once: <b>imperceptible latency</b>, <b>precise audio-visual alignment</b> and <b>high audio quality</b>. Existing streaming V2A methods trade these off: shrinking the visual receptive field to cut latency degrades alignment, and denoising each audio patch in isolation limits quality.</p>
     <p style="margin-top:12px">We present <b>LiveFoley</b>, a plug-and-play sound engine for interactive worlds. For <b>imperceptible latency</b>, LiveFoley reaches an end-to-end latency of 156&nbsp;ms on a single A800 GPU, below the human perceptual threshold. For <b>precise alignment</b>, a Trailing Sliding Window turns off-the-shelf segment-level encoders into streaming modules without retraining and matches offline models in temporal alignment (DeSync 0.48 vs. 0.47) at a 0.08&nbsp;s frontend look-ahead. For <b>audio quality</b>, we widen the denoising window of the local diffusion head: History LocDiT, the default, adds past context at no latency cost, while the optional Future-Warmup LocDiT breaks an autoregressive deadlock to further improve quality at a 0.08&nbsp;s backend look-ahead. In addition, a Unified Varhop Framework lets one model <b>adapt its latency to the scene</b>, and LiveFoley generalizes to AR/VR and game-engine footage with stable long-form generation.</p>
   </div>
+
+  <figure class="ov-video">
+    <video controls playsinline preload="none" poster="static/videos/overview/livefoley_demo_poster.jpg" aria-label="LiveFoley demo video">
+      <source src="static/videos/overview/livefoley_demo.mp4?v=1" type="video/mp4">
+    </video>
+  </figure>
 
   <div class="contrib">
     <div class="c">
@@ -1240,7 +1258,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   <p class="sec-lead s3d-leads">
     <span>Temporal alignment on par with offline models at a 0.08&nbsp;s frontend look-ahead: DeSync 0.48 (LiveFoley-48k) vs. 0.47 for the offline MMAudio-L, far ahead of MMAudio (online) (0.71), V-AURA (0.69), WorldSonus (0.67) and SoundReactor (1.03). LiveFoley also has the best audio quality among streaming systems and the highest PQ of all systems (6.26).</span>
     <span>In a listening test on 16 clips, LiveFoley outperforms all online baselines (MMAudio (online) / V-AURA / WorldSonus) on both quality (MOS-Q 3.23 vs. 2.79 / 2.75 / 3.04) and alignment (MOS-A 3.58 vs. 3.15 / 3.02 / 2.96), and approaches the offline MMAudio-L in alignment (3.79).</span>
-    <span>At hop size <i>s</i>&nbsp;=&nbsp;1, LiveFoley reaches an end-to-end latency of 156&nbsp;ms on a single A800 GPU, and the optional Future-Warmup LocDiT adds a further 0.08&nbsp;s (an estimated 236&nbsp;ms); both remain below the human perceptual threshold. All compute stages together take under 80&nbsp;ms; the rest is the algorithmic wait for one hop of video.</span>
+    <span>Sound arrives in just 156&nbsp;ms on a single A800 GPU, below the human perceptual threshold. LiveFoley stays as well aligned as offline models (DeSync 0.48 vs. 0.47 for MMAudio-L) with a hundred times less waiting (0.08&nbsp;s vs. 8&nbsp;s of video), and listeners rate it the best among streaming systems (MOS-Q 3.23 vs. 3.04).</span>
   </p>
 
   <!-- same 3D stage component as Method -->
@@ -1274,21 +1292,11 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
         <div class="s3d-body"><img src="static/figs/sm/mos.png?v=1026" width="2535" height="801" alt="Mean opinion scores for quality and alignment" loading="lazy"></div>
         <img class="s3d-thumb" src="static/figs/th/mos.jpg?v=1026" alt="" loading="lazy"><span class="s3d-name">Listening test</span>
         <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Listening test figure"></button></div></div>
-      <div class="s3d-item"><div class="s3d-card">
-    <div class="s3d-body"><div class="lat">
-      <h4>Where the 156 ms go</h4>
-      <p class="lat-sub">End-to-end latency with History LocDiT at hop <i>s</i>&nbsp;=&nbsp;1 (0.08&nbsp;s frontend look-ahead), in ms.</p>
-      <div class="row"><span>Frontend look-ahead</span><div class="t wait" style="width:100%"></div><span>80</span></div>
-      <div class="row"><span>Visual frontend</span><div class="t" style="width:22.5%"></div><span>18</span></div>
-      <div class="row"><span>LM step</span><div class="t" style="width:21.3%"></div><span>17</span></div>
-      <div class="row"><span>LocDiT denoise</span><div class="t" style="width:31.3%"></div><span>25</span></div>
-      <div class="row"><span>Causal VAE decode</span><div class="t" style="width:10%"></div><span>8</span></div>
-      <div class="row"><span>Pipeline overhead</span><div class="t" style="width:10%"></div><span>8</span></div>
-      <div class="total"><span>End-to-end latency</span><em>156 ms</em></div>
-    </div></div>
-        <img class="s3d-thumb" src="static/figs/th/latency.jpg" alt="" loading="lazy" style="object-position:left center"><span class="s3d-name">Latency</span>
-        <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Latency: where the 156 ms go"></button></div></div>
-      <span class="s3d-lbl" aria-hidden="true">Objective metrics</span><span class="s3d-lbl" aria-hidden="true">Listening test</span><span class="s3d-lbl" aria-hidden="true">Latency</span>
+      <div class="s3d-item" data-zoom="static/figs/results_summary.png?v=6"><div class="s3d-card">
+        <div class="s3d-body"><img src="static/figs/sm/results_summary.png?v=6" width="3144" height="1554" alt="Sync error against waiting time for streaming and offline models, with the key numbers: 156 ms latency, DeSync 0.48 vs. 0.47, MOS-Q 3.23 vs. 3.04" loading="lazy"></div>
+        <img class="s3d-thumb" src="static/figs/th/results_summary.jpg?v=6" alt="" loading="lazy"><span class="s3d-name">Key results</span>
+        <button type="button" class="s3d-hit" aria-controls="results-panel" aria-label="Key results figure"></button></div></div>
+      <span class="s3d-lbl" aria-hidden="true">Objective metrics</span><span class="s3d-lbl" aria-hidden="true">Listening test</span><span class="s3d-lbl" aria-hidden="true">Key results</span>
     </div>
     <div class="s3d-panel">
       <div class="s3d-bar"><span class="kicker s3d-kick"></span><span class="s3d-dots" aria-hidden="true"></span>
@@ -1304,8 +1312,8 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
         <p class="cap"><b>Listening test</b> on the 16 clips in the <a href="#compare">comparison below</a> (5-point scale; the dashed line separates offline from online systems). LiveFoley leads all online systems on quality and alignment; WorldSonus runs at a comparable frontend look-ahead (0.10&nbsp;s) but trails LiveFoley most clearly in alignment. LiveFoley approaches the offline MMAudio-L in alignment (3.58 vs. 3.79) but still trails it in quality (3.23 vs. 3.62).</p>
       </article>
       <article class="s3d-text" hidden>
-        <h3>Latency</h3>
-        <p class="cap">Measured on a single A800 with a simulator that releases frames at 25&nbsp;fps (History LocDiT, <i>s</i>&nbsp;=&nbsp;1). The frontend look-ahead of one hop is an algorithmic wait independent of hardware; the remaining compute stages together take under 80&nbsp;ms. The optional Future-Warmup LocDiT adds 0.08&nbsp;s of backend look-ahead, giving an estimated 236&nbsp;ms.</p>
+        <h3>Key results</h3>
+        <p class="cap"><b>Left:</b> audio-visual sync error (DeSync) against how long each model waits for video, on a log scale. <b>Right:</b> end-to-end latency, alignment and listening-test quality (MOS-Q). Latency is measured on a single A800 with a simulator that releases frames at 25&nbsp;fps (History LocDiT, <i>s</i>&nbsp;=&nbsp;1): one 0.08&nbsp;s hop of look-ahead plus under 80&nbsp;ms of compute. The optional Future-Warmup LocDiT adds 0.08&nbsp;s, giving an estimated 236&nbsp;ms.</p>
       </article>
       </div>
     </div>
@@ -2196,6 +2204,10 @@ function orbDock() {             // no animation (deep links, resize)
 /* one demo video at a time */
 document.addEventListener('play', e => {
   if (e.target.tagName !== 'VIDEO' || e.target.closest('.cmp, .orbs') || e.target.classList.contains('drive-bg')) return;   // decorative loops never pause anything
+  if (e.target.classList.contains('hero-video')) {               // scrolling back to the hero resumes it: that must not stop a demo the visitor started
+    if (document.querySelector('.ov-video video')?.paused === false) e.target.muted = true;
+    return;
+  }
   document.querySelectorAll('video').forEach(v => { if (v !== e.target && !v.paused && !v.closest('.orbs') && !v.classList.contains('drive-bg')) v.pause(); });
   stopCmp();
 }, true);
@@ -2858,7 +2870,7 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
     console.info('[hero video] fell back to the static image:', e && (e.message || e.type || e));
     v.pause(); v.querySelectorAll('source').forEach(s => s.remove()); v.load();
     v.classList.remove('on', 'shown'); hero.classList.remove('vid');
-    const b = hero.querySelector('.hero-play'); if (b) b.hidden = true;
+    hero.querySelectorAll('.hero-play,.hero-sound').forEach(b => { b.hidden = true; });
   };
   v.classList.add('on'); hero.classList.add('vid');           // hide the still while the video loads
   /* intro lock (owner 2026-10-09; 4 s since 2026-11-05): on a fresh visit at the top, scrolling stays locked for 4 s,
@@ -2898,7 +2910,17 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
   v.querySelectorAll('source')[v.querySelectorAll('source').length - 1].addEventListener('error', fallback);
   setTimeout(() => { if (!v.classList.contains('shown')) fallback('timeout'); }, 12000);   // stalled / never started
   v.preload = 'auto'; v.load();
-  const p = v.play(); if (p && p.catch) p.catch(fallback);
+  const sndBtn = hero.querySelector('.hero-sound'); let soundOn = !seen;                  // audible only on the first visit
+  const setSound = on => { soundOn = on; v.muted = !on; sndBtn.setAttribute('aria-pressed', on); sndBtn.querySelector('span').textContent = on ? 'Mute' : 'Unmute'; };
+  const onGesture = e => { unarm(); if (soundOn && !sndBtn.contains(e.target)) v.muted = false; };
+  const unarm = () => ['pointerdown', 'keydown'].forEach(k => document.removeEventListener(k, onGesture, true));
+  setSound(soundOn);
+  const p = v.play();
+  if (p && p.catch) p.catch(e => {
+    if (e.name !== 'NotAllowedError' || v.muted) return fallback(e);
+    v.muted = true; ['pointerdown', 'keydown'].forEach(k => document.addEventListener(k, onGesture, true));
+    v.play().catch(fallback);
+  });
   /* once played: cross-fade video -> still (the still's own .9 s opacity transition + a slower video fade) */
   let finished = false, hideT = 0;
   const btn = hero.querySelector('.hero-play');
@@ -2907,13 +2929,21 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
     hero.classList.add('vid-dawn', 'vid-done'); hero.classList.remove('vid');
     clearTimeout(hideT); hideT = setTimeout(() => { v.pause(); v.classList.remove('on', 'shown'); }, 400);
   };
-  const replay = () => {                                       // (cross-fade still ->) video, from the start
+  const replay = withSound => {                                // (cross-fade still ->) video, from the start; silent unless Unmute asked for sound
+    if (withSound !== true) setSound(false);
     clearTimeout(hideT); finished = false; hero.classList.remove('vid-dawn');
     v.classList.add('on'); hero.classList.add('vid'); try { v.currentTime = 0; } catch (_) {}
     requestAnimationFrame(() => { v.classList.add('shown'); setTimeout(() => hero.classList.remove('vid-done'), 1700); });
     const q = v.play(); if (q && q.catch) q.catch(() => {});
   };
-  v.addEventListener('playing', () => { if (btn) btn.hidden = false; });
+  /* the sound lives in the video file, so it cannot drift or stutter against the picture. Audible on the first visit only (replays and
+     return visits are silent), with a Mute / Unmute button. Browsers may refuse audible autoplay on a first visit: the clip then starts muted and
+     unmutes on the visitor's first click or key press */
+  sndBtn.addEventListener('click', () => {
+    unarm(); setSound(!soundOn);
+    if (soundOn && (finished || v.currentTime >= v.duration - 3.0)) replay(true);      // too late to hear it: start over, with sound
+  });
+  v.addEventListener('playing', () => { if (btn) btn.hidden = false; sndBtn.hidden = false; });
   v.addEventListener('timeupdate', () => {
     if (!v.duration || finished) return;
     if (v.currentTime >= v.duration - 3.0) hero.classList.add('vid-dawn');          // fade the video to white first
