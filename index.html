@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- fonts are self-hosted (owner 2026-10-11): Google serves iOS a different Source Serif build that renders
      with broken spacing after "r" in some engines, and fonts.googleapis.com is unreachable from mainland China -->
-<link rel="preload" as="image" href="static/videos/hero/hero_world_first.jpg" media="(min-width:861px)">
+<link rel="preload" as="image" href="static/figs/hero_world.jpg?v=2">
 <link href="static/fonts/fonts.css" rel="stylesheet">
 <style>
 /* ---------- palette (2026-10-08) ----------
@@ -304,7 +304,7 @@ p.sub-desc{color:var(--text2);font-size:15px;max-width:1000px;margin-bottom:20px
     -webkit-mask-composite:source-in;
     mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%),linear-gradient(180deg,transparent 0,#000 26%,#000 88%,transparent 100%);
     mask-composite:intersect}
-  .hero-video.on.shown,.hero-video.on.poster{opacity:var(--hero-img-a)}
+  .hero-video.on.shown{opacity:var(--hero-img-a)}
   .hero.vid::before{opacity:0}
   /* ending ("fade to white"): the video first dissolves into the white page (.vid-dawn), then the still
      emerges out of the white (.vid-done) */
@@ -1111,6 +1111,10 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
      frame; sources are attached by JS so phones / reduced-motion / failures keep the static hero_world.jpg -->
 <video class="hero-video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"
        data-webm="static/videos/hero/hero_world.webm?v=12" data-mp4="static/videos/hero/hero_world.mp4?v=13"></video>
+<script>/* hero clip first: start its download before anything below the fold is even parsed */
+(function () { var v = document.querySelector('.hero-video');
+  if (!matchMedia('(min-width:861px)').matches || (navigator.connection && navigator.connection.saveData)) return;
+  v.preload = 'auto'; v.src = v.dataset.mp4; v.load(); })();</script>
 <!-- bottom-left replay control (desktop, appears once the clip is running): restarts the clip from the beginning -->
 <button type="button" class="hero-sound" hidden aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="mute" d="m16 9.5 5 5M21 9.5l-5 5"/></svg><span>Mute</span></button>
 <button type="button" class="hero-play" hidden aria-label="Replay the background video" title="Replay"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 3.8v4.6h4.6"/><path d="M10.4 9.2v5.6l4.6-2.8z" fill="currentColor" stroke="none"/></svg></button>
@@ -2869,7 +2873,7 @@ function loadRest() {
   if (!o) return next();
   o.preload = 'auto'; o.load(); o.addEventListener('canplay', next, { once: true }); setTimeout(next, 3000);
 }
-addEventListener('load', () => setTimeout(loadRest, document.querySelector('.hero-video.on') ? 8000 : 1000));   // fallback if the hero never reports ready
+addEventListener('load', () => setTimeout(loadRest, document.querySelector('.hero-video.on') ? 15000 : 1000));   // fallback if the hero never reports ready
 (function heroVideo() {
   const v = document.querySelector('.hero-video'), hero = document.querySelector('.hero'); if (!v || !hero) return;
   /* Not gated on prefers-reduced-motion on purpose (owner decision 2026-10-08): Windows with "animation effects"
@@ -2881,11 +2885,11 @@ addEventListener('load', () => setTimeout(loadRest, document.querySelector('.her
     if (dead || v.classList.contains('shown')) return; dead = true;
     unlockIntro(); loadRest();
     console.info('[hero video] fell back to the static image:', e && (e.message || e.type || e));
-    v.pause(); v.querySelectorAll('source').forEach(s => s.remove()); v.load();
-    v.classList.remove('on', 'shown', 'poster'); hero.classList.remove('vid');
+    v.pause(); v.removeAttribute('src'); v.load();
+    v.classList.remove('on', 'shown'); hero.classList.remove('vid');
     hero.querySelectorAll('.hero-play,.hero-sound').forEach(b => { b.hidden = true; });
   };
-  v.poster = 'static/videos/hero/hero_world_first.jpg'; v.classList.add('on', 'poster'); hero.classList.add('vid');   // first frame shows at once while the clip loads
+  v.classList.add('on');                                       // the still stays up until the clip really plays
   v.addEventListener('canplaythrough', loadRest, { once: true });
   /* intro lock (owner 2026-10-09; 10 s since 2026-11-07): on a fresh visit at the top, scrolling stays locked for 10 s,
      which gives the demos below time to load; released early on any failure */
@@ -2912,16 +2916,9 @@ addEventListener('load', () => setTimeout(loadRest, document.querySelector('.her
     requestAnimationFrame(fill);
     setTimeout(unlock, LOCK_MS);
   }
-  [['mp4', 'video/mp4'], ['webm', 'video/webm; codecs="vp9"']].forEach(([k, type]) => {
-    if (!v.canPlayType(type)) return;
-    const s = document.createElement('source'); s.src = v.dataset[k]; s.type = type; v.append(s);
-  });
-  if (!v.querySelector('source')) return fallback();
-  v.addEventListener('playing', () => v.classList.add('shown'), { once: true });
+  if (!v.canPlayType('video/mp4')) return fallback();
+  v.addEventListener('playing', () => { hero.classList.add('vid'); v.classList.add('shown'); }, { once: true });
   v.addEventListener('error', fallback, true);                // source errors bubble to the <source>, so capture
-  v.querySelectorAll('source')[v.querySelectorAll('source').length - 1].addEventListener('error', fallback);
-  setTimeout(() => { if (!v.classList.contains('shown')) fallback('timeout'); }, 12000);   // stalled / never started
-  v.preload = 'auto'; v.load();
   const sndBtn = hero.querySelector('.hero-sound'); let soundOn = !seen;                  // audible only on the first visit
   const setSound = on => { soundOn = on; v.muted = !on; sndBtn.setAttribute('aria-pressed', on); sndBtn.querySelector('span').textContent = on ? 'Mute' : 'Unmute'; };
   const onGesture = e => { unarm(); if (soundOn && !sndBtn.contains(e.target)) v.muted = false; };
