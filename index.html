@@ -1001,7 +1001,7 @@ td.u{text-decoration:underline;text-underline-offset:3px}
 pre.bib{background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;font:13.5px/1.6 "JetBrains Mono",monospace;overflow-x:hidden;position:relative;color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere}
 .copy{position:absolute;top:10px;right:10px;border:1px solid var(--border);background:#fff;border-radius:8px;padding:4px 10px;font:500 12.5px Inter,sans-serif;cursor:pointer;color:var(--text2)}
 footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px}
-.ov-video{margin:64px auto 72px;max-width:880px}
+.ov-video{margin:32px auto;max-width:820px}
 .ov-video video{display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;box-shadow:0 8px 28px rgb(var(--ink-rgb)/.10)}
 .visit-stats{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 24px;margin-top:12px}
 .visit-stats>span{display:inline-flex;align-items:center;gap:6px}
@@ -1172,14 +1172,13 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
   <h2 class="sec-title">Overview</h2>
   <div class="abstract">
     <p>Interactive worlds such as games, AR/VR and 3D engines need sound that reacts to every action as frames are rendered. Recent audio-visual world models generate synchronized audio, but their audio is tied to their own video generators and cannot serve external sources such as game-engine renders or live camera feeds. <b>Streaming video-to-audio (V2A)</b> offers a <b>source-agnostic</b> alternative by generating sound directly from any live pixel stream. To be a usable sound engine, however, it must meet three demands at once: <b>imperceptible latency</b>, <b>precise audio-visual alignment</b> and <b>high audio quality</b>. Existing streaming V2A methods trade these off: shrinking the visual receptive field to cut latency degrades alignment, and denoising each audio patch in isolation limits quality.</p>
-    <p style="margin-top:12px">We present <b>LiveFoley</b>, a plug-and-play sound engine for interactive worlds. For <b>imperceptible latency</b>, LiveFoley reaches an end-to-end latency of 156&nbsp;ms on a single A800 GPU, below the human perceptual threshold. For <b>precise alignment</b>, a Trailing Sliding Window turns off-the-shelf segment-level encoders into streaming modules without retraining and matches offline models in temporal alignment (DeSync 0.48 vs. 0.47) at a 0.08&nbsp;s frontend look-ahead. For <b>audio quality</b>, we widen the denoising window of the local diffusion head: History LocDiT, the default, adds past context at no latency cost, while the optional Future-Warmup LocDiT breaks an autoregressive deadlock to further improve quality at a 0.08&nbsp;s backend look-ahead. In addition, a Unified Varhop Framework lets one model <b>adapt its latency to the scene</b>, and LiveFoley generalizes to AR/VR and game-engine footage with stable long-form generation.</p>
+    <figure class="ov-video">
+      <video controls playsinline preload="none" poster="static/videos/overview/livefoley_demo_poster.jpg" aria-label="LiveFoley demo video">
+        <source src="static/videos/overview/livefoley_demo.mp4?v=1" type="video/mp4">
+      </video>
+    </figure>
+    <p>We present <b>LiveFoley</b>, a plug-and-play sound engine for interactive worlds. For <b>imperceptible latency</b>, LiveFoley reaches an end-to-end latency of 156&nbsp;ms on a single A800 GPU, below the human perceptual threshold. For <b>precise alignment</b>, a Trailing Sliding Window turns off-the-shelf segment-level encoders into streaming modules without retraining and matches offline models in temporal alignment (DeSync 0.48 vs. 0.47) at a 0.08&nbsp;s frontend look-ahead. For <b>audio quality</b>, we widen the denoising window of the local diffusion head: History LocDiT, the default, adds past context at no latency cost, while the optional Future-Warmup LocDiT breaks an autoregressive deadlock to further improve quality at a 0.08&nbsp;s backend look-ahead. In addition, a Unified Varhop Framework lets one model <b>adapt its latency to the scene</b>, and LiveFoley generalizes to AR/VR and game-engine footage with stable long-form generation.</p>
   </div>
-
-  <figure class="ov-video">
-    <video controls playsinline preload="none" poster="static/videos/overview/livefoley_demo_poster.jpg" aria-label="LiveFoley demo video">
-      <source src="static/videos/overview/livefoley_demo.mp4?v=1" type="video/mp4">
-    </video>
-  </figure>
 
   <div class="contrib">
     <div class="c">
