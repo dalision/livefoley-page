@@ -21,6 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- fonts are self-hosted (owner 2026-10-11): Google serves iOS a different Source Serif build that renders
      with broken spacing after "r" in some engines, and fonts.googleapis.com is unreachable from mainland China -->
+<link rel="preload" as="image" href="static/videos/hero/hero_world_first.jpg" media="(min-width:861px)">
 <link href="static/fonts/fonts.css" rel="stylesheet">
 <style>
 /* ---------- palette (2026-10-08) ----------
@@ -303,7 +304,7 @@ p.sub-desc{color:var(--text2);font-size:15px;max-width:1000px;margin-bottom:20px
     -webkit-mask-composite:source-in;
     mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%),linear-gradient(180deg,transparent 0,#000 26%,#000 88%,transparent 100%);
     mask-composite:intersect}
-  .hero-video.on.shown{opacity:var(--hero-img-a)}
+  .hero-video.on.shown,.hero-video.on.poster{opacity:var(--hero-img-a)}
   .hero.vid::before{opacity:0}
   /* ending ("fade to white"): the video first dissolves into the white page (.vid-dawn), then the still
      emerges out of the white (.vid-done) */
@@ -1109,7 +1110,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <!-- hero key-art video (Kling render, speed-ramped, no audio): desktop only, plays once and rests on its last
      frame; sources are attached by JS so phones / reduced-motion / failures keep the static hero_world.jpg -->
 <video class="hero-video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"
-       data-webm="static/videos/hero/hero_world.webm?v=12" data-mp4="static/videos/hero/hero_world.mp4?v=12"></video>
+       data-webm="static/videos/hero/hero_world.webm?v=12" data-mp4="static/videos/hero/hero_world.mp4?v=13"></video>
 <!-- bottom-left replay control (desktop, appears once the clip is running): restarts the clip from the beginning -->
 <button type="button" class="hero-sound" hidden aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="mute" d="m16 9.5 5 5M21 9.5l-5 5"/></svg><span>Mute</span></button>
 <button type="button" class="hero-play" hidden aria-label="Replay the background video" title="Replay"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 3.8v4.6h4.6"/><path d="M10.4 9.2v5.6l4.6-2.8z" fill="currentColor" stroke="none"/></svg></button>
@@ -1324,7 +1325,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
 <!-- =================== DEMOS =================== -->
 <section id="demos" class="alt">
 <!-- driving backdrop (owner 2026-10-09): City drive, blur BAKED into the file (640x360 gblur 14, 93 KB), desktop orb mode only -->
-<video class="drive-bg" src="static/videos/orbs/drive_bg.mp4" poster="static/videos/orbs/drive_bg.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true" tabindex="-1"></video>
+<video class="drive-bg" src="static/videos/orbs/drive_bg.mp4" poster="static/videos/orbs/drive_bg.jpg" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
 <div class="drive-veil" aria-hidden="true"></div>
 <canvas class="demo-bg idle" aria-hidden="true"></canvas>
 <div class="container">
@@ -1356,7 +1357,7 @@ footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13.5px
         <span class="orb-float"><span class="ball"><img class="orb-pic" src="static/videos/orbs/wild_swim_lens.jpg" alt=""><canvas class="orb-pic" width="360" height="360" data-tile="0" aria-hidden="true"></canvas></span></span>
         <span class="orb-shadow" aria-hidden="true"></span>
         <span class="orb-label"><b>In the wild</b><small>YouTube</small></span><span class="orb-hint" aria-hidden="true">Click to explore</span></button>
-      <video class="orb-sprite" src="static/videos/orbs/orbs_sprite.mp4" muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1" style="display:none"></video>
+      <video class="orb-sprite" src="static/videos/orbs/orbs_sprite.mp4" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" style="display:none"></video>
       <button type="button" class="orb-back" aria-label="Back to all demo worlds"><span aria-hidden="true">&#8634;</span><small>All worlds</small></button>
     </div>
   </div>
@@ -1731,7 +1732,7 @@ function makeGallery(root, dir, list, label, cats) {
     if (vm) vm.innerHTML = list[i][4] === 'gamehd' || /articraft/.test(f) ? '16 kHz &middot; mono' : '48 kHz &middot; stereo';
     dur.textContent = '';
     v.poster = `${PH}${f}.jpg`; v.setAttribute('aria-label', `${t}, video with generated audio`);
-    v.preload = 'metadata'; v.src = `${V}${list[i][4] || dir}/${f}.mp4?v=2`;   // v=2: audio delayed by 0.25 s
+    v.preload = loadRest.done ? 'metadata' : 'none'; v.src = `${V}${list[i][4] || dir}/${f}.mp4?v=2`;   // v=2: audio delayed by 0.25 s
     if (focus) { tabs[i].focus(); tabs[i].scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
   }
   root.querySelector('.case-list').addEventListener('click', e => { const b = e.target.closest('[role="tab"]'); if (!b) return; const i = tabs.indexOf(b);
@@ -2208,7 +2209,8 @@ document.addEventListener('play', e => {
     if (document.querySelector('.ov-video video')?.paused === false) e.target.muted = true;
     return;
   }
-  document.querySelectorAll('video').forEach(v => { if (v !== e.target && !v.paused && !v.closest('.orbs') && !v.classList.contains('drive-bg')) v.pause(); });
+  document.querySelectorAll('video').forEach(v => { if (v !== e.target && !v.paused && !v.closest('.orbs') && !v.classList.contains('drive-bg') && !v.classList.contains('hero-video')) v.pause(); });
+  window.heroMute?.();                                            // the hero keeps playing, but silently
   stopCmp();
 }, true);
 
@@ -2241,7 +2243,7 @@ function egoGo(i, focus) {
   if (evm) evm.innerHTML = d.dir === 'gamehd' ? '16 kHz &middot; mono' : '48 kHz &middot; stereo';
   egoVideo.poster = `${PH}${d.id}.jpg`;
   egoVideo.setAttribute('aria-label', `${d.title}, ${d.src || 'Ego-Exo4D'}, video with generated audio`);
-  egoVideo.preload = 'metadata';
+  egoVideo.preload = loadRest.done ? 'metadata' : 'none';
   egoVideo.src = `static/videos/${d.dir || 'egoexo'}/${d.id}.mp4?v=2`;   // v=2: cooking clip trimmed to 30 s; VR gameplay lives in gamehd/
   if (focus) { t.focus(); t.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
 }
@@ -2306,7 +2308,7 @@ let cur = null; // {card, video, sys}
 function cmpCard([id, t, s], k) {
   /* cards behind "Show more" carry no src / poster until it is opened (owner 2026-10-09: load only the first 4) */
   const lazy = k >= CMP_FIRST, at = (a, u) => `${lazy ? 'data-' : ''}${a}="${u}"`;
-  return `<div class="cmp" data-id="${id}"><video muted playsinline controls controlslist="nodownload noplaybackrate" disablepictureinpicture preload="metadata" ${at('poster', `${C}${id}.jpg`)} ${at('src', `${C}${id}.mp4`)} aria-label="${t}: silent video, pick a system below to hear its audio"></video>` +
+  return `<div class="cmp" data-id="${id}"><video muted playsinline controls controlslist="nodownload noplaybackrate" disablepictureinpicture preload="none" ${at('poster', `${C}${id}.jpg`)} ${at('src', `${C}${id}.mp4`)} aria-label="${t}: silent video, pick a system below to hear its audio"></video>` +
     `<div class="head"><b>${t}</b><span>${s ? s + ' &middot; ' : ''}8 s</span></div><div class="cviz" aria-hidden="true"><canvas></canvas></div><div class="lanes" role="group" aria-label="Audio from each system">` +
     SYS.map(([k, n, la, o], i) => (i === 0 || la !== SYS[i - 1][2]
         ? `<div class="lane-group ${la === 'offline' ? 'off' : 'on'}"><i></i>${la === 'offline' ? 'Offline <span>sees the whole clip first</span>' : 'Online <span>streaming</span>'}</div>` : '') +
@@ -2367,7 +2369,8 @@ function stopCmp() {
   c.video.pause(); audio.pause(); setLaneUI();
 }
 function pauseOthers(video) {
-  document.querySelectorAll('video').forEach(v => { if (v !== video && !v.paused) v.pause(); });
+  document.querySelectorAll('video').forEach(v => { if (v !== video && !v.paused && !v.classList.contains('hero-video')) v.pause(); });
+  window.heroMute?.();
 }
 function start() {                          // (re)start the current lane from the video's time
   const v = cur.video;
@@ -2856,7 +2859,17 @@ function warmFirst() {
   if (warmFirst.done) return; warmFirst.done = true;
   Object.keys(Warm.reg).forEach(k => Warm.first(k, 3));
 }
-addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without the intro lock (deep links, replays)
+/* load order: hero clip first, then the overview demo, then the first demo clips */
+function loadRest() {
+  if (loadRest.done) return; loadRest.done = true;
+  const o = document.querySelector('.ov-video video'); let went = false;
+  const next = () => { if (went) return; went = true; warmFirst();
+    document.querySelectorAll('.stage video, .cmp video').forEach(x => { if (x.preload === 'none') x.preload = 'metadata'; });
+    document.querySelectorAll('.drive-bg, .orb-sprite').forEach(x => { x.preload = 'auto'; }); };
+  if (!o) return next();
+  o.preload = 'auto'; o.load(); o.addEventListener('canplay', next, { once: true }); setTimeout(next, 3000);
+}
+addEventListener('load', () => setTimeout(loadRest, document.querySelector('.hero-video.on') ? 8000 : 1000));   // fallback if the hero never reports ready
 (function heroVideo() {
   const v = document.querySelector('.hero-video'), hero = document.querySelector('.hero'); if (!v || !hero) return;
   /* Not gated on prefers-reduced-motion on purpose (owner decision 2026-10-08): Windows with "animation effects"
@@ -2866,14 +2879,15 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
   let dead = false, unlockIntro = () => {};
   const fallback = (e) => {
     if (dead || v.classList.contains('shown')) return; dead = true;
-    unlockIntro();
+    unlockIntro(); loadRest();
     console.info('[hero video] fell back to the static image:', e && (e.message || e.type || e));
     v.pause(); v.querySelectorAll('source').forEach(s => s.remove()); v.load();
-    v.classList.remove('on', 'shown'); hero.classList.remove('vid');
+    v.classList.remove('on', 'shown', 'poster'); hero.classList.remove('vid');
     hero.querySelectorAll('.hero-play,.hero-sound').forEach(b => { b.hidden = true; });
   };
-  v.classList.add('on'); hero.classList.add('vid');           // hide the still while the video loads
-  /* intro lock (owner 2026-10-09; 4 s since 2026-11-05): on a fresh visit at the top, scrolling stays locked for 4 s,
+  v.poster = 'static/videos/hero/hero_world_first.jpg'; v.classList.add('on', 'poster'); hero.classList.add('vid');   // first frame shows at once while the clip loads
+  v.addEventListener('canplaythrough', loadRest, { once: true });
+  /* intro lock (owner 2026-10-09; 10 s since 2026-11-07): on a fresh visit at the top, scrolling stays locked for 10 s,
      which gives the demos below time to load; released early on any failure */
   const root = document.documentElement, bar = hero.querySelector('.intro-load');
   /* first visit only: a refresh / return visit has the demos cached already, so it just plays the clip */
@@ -2893,12 +2907,10 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
     if (bar) bar.hidden = false;
     placeBar(); addEventListener('resize', placeBar); document.fonts && document.fonts.ready.then(placeBar);
     unlockIntro = unlock;
-    const LOCK_MS = 4000, t0 = performance.now();
+    const LOCK_MS = 10000, t0 = performance.now();
     const fill = now => { if (!locked || !bar) return; bar.style.setProperty('--p', Math.min(1, (now - t0) / LOCK_MS)); requestAnimationFrame(fill); };
     requestAnimationFrame(fill);
     setTimeout(unlock, LOCK_MS);
-    /* while the clip plays: the first 3 clips of every world and every Game album (after the clip has a head start) */
-    setTimeout(warmFirst, 1500);
   }
   [['mp4', 'video/mp4'], ['webm', 'video/webm; codecs="vp9"']].forEach(([k, type]) => {
     if (!v.canPlayType(type)) return;
@@ -2915,6 +2927,7 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
   const onGesture = e => { unarm(); if (soundOn && !sndBtn.contains(e.target)) v.muted = false; };
   const unarm = () => ['pointerdown', 'keydown'].forEach(k => document.removeEventListener(k, onGesture, true));
   setSound(soundOn);
+  window.heroMute = () => { unarm(); if (soundOn) setSound(false); };
   const p = v.play();
   if (p && p.catch) p.catch(e => {
     if (e.name !== 'NotAllowedError' || v.muted) return fallback(e);
@@ -2951,11 +2964,8 @@ addEventListener('load', () => setTimeout(warmFirst, 4000));   // visits without
   });
   v.addEventListener('ended', finish);
   if (btn) btn.addEventListener('click', replay);
-  /* save CPU/GPU: pause while the hero is scrolled out of view, resume when it comes back */
-  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => {
-    if (dead || finished || !v.classList.contains('shown')) return;
-    if (e.isIntersecting) { const q = v.play(); if (q && q.catch) q.catch(() => {}); } else v.pause();
-  }, { threshold: 0.05 }).observe(hero);
+  /* keeps playing, sound included, when the visitor scrolls away (owner 2026-11-07); only a hidden tab pauses it */
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !dead && !finished && v.classList.contains('shown') && v.paused) { const q = v.play(); if (q && q.catch) q.catch(() => {}); } });
 })();
 /* Demos ambient backdrop: follows the clip in the visible demo player. While a clip plays, a tiny frame is
    grabbed ~5x/s and blended onto a 192x108 canvas (temporal smoothing = slow, fluid colour changes); when the
